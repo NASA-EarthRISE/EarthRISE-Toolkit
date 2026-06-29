@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EarthRISE Toolkit — Tools{% endblock %}
+{% block meta_description %}Browse and search the EarthRISE Toolkit — a catalog of Earth observation and geospatial tools developed by EarthRISE.{% endblock %}
+
+{% block content %}
+
+<!-- ============================================================
+     Hero Banner
+     ============================================================ -->
+<section class="hz-hero" aria-labelledby="hero-heading">
+  <div class="hz-container">
+    <div class="row align-items-center">
+      <div class="col">
+        <h1 id="hero-heading">
+          <i class="bi bi-globe2 me-2" aria-hidden="true"></i>EarthRISE Toolkit
+        </h1>
+        <p>
+          A catalog of Earth observation and geospatial decision-support tools developed by EarthRISE.
+          {% if user.is_staff %}
+            Viewing as <strong>staff</strong> — all active tools are visible.
+          {% endif %}
+        </p>
+      </div>
+      {% if user.is_staff %}
+      <div class="col-auto">
+        <a href="{% url 'add_tool' %}" class="btn-hz btn-hz-primary"
+           aria-label="Add a new tool to the catalog">
+          <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Add Tool
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     Filter / Search Bar
+     ============================================================ -->
+<section class="hz-filter-bar" aria-label="Filter and search tools">
+  <div class="hz-container">
+    <form id="filterForm" method="get" action="" role="search">
+      <div class="row g-2 align-items-end">
+
+        <!-- Search -->
+        <div class="col-12 col-md-4">
+          <label for="searchInput" class="hz-form-label">Search Tools</label>
+          <div class="input-group">
+            <input type="search"
+                   id="searchInput"
+                   name="q"
+                   class="form-control hz-form-control"
+                   placeholder="Search by name or description…"
+                   value="{{ search_query }}"
+                   aria-label="Search tools by name or description"
+                   autocomplete="off">
+            <button type="submit" class="btn btn-hz btn-hz-primary"
+                    style="border-radius:0 var(--radius) var(--radius) 0;"
+                    aria-label="Submit search">
+              <i class="bi bi-search" aria-hidden="true"></i>
+              <span class="visually-hidden">Search</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Organization filter -->
+        <div class="col-6 col-md-3 col-lg-2">
+          <label for="orgFilter" class="hz-form-label">Organization</label>
+          <select id="orgFilter" name="org" class="form-select hz-form-control"
+                  aria-label="Filter by organization">
+            <option value="">All Organizations</option>
+            {% for org in organizations %}
+            <option value="{{ org.name }}"{% if org_filter == org.name %} selected{% endif %}>
+              {{ org.name }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Clear button -->
+        <div class="col-6 col-md-auto">
+          {% if search_query or org_filter %}
+          <a href="{% url 'home' %}" class="btn-hz d-inline-block"
+             style="background:var(--color-text-meta);"
+             aria-label="Clear all filters and search">
+            <i class="bi bi-x-circle me-1" aria-hidden="true"></i> Clear
+          </a>
+          {% endif %}
+        </div>
+
+      </div><!-- /.row -->
+
+      <!-- Results count -->
+      <div class="hz-results-meta mt-2" aria-live="polite" aria-atomic="true">
+        {% if total_count == 0 %}
+          No tools found.
+        {% elif total_count == 1 %}
+          1 tool found.
+        {% else %}
+          {{ total_count }} tool{{ total_count|pluralize }} found.
+        {% endif %}
+        {% if search_query %}
+          Showing results for <strong>{{ search_query }}</strong>.
+        {% endif %}
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<!-- ============================================================
+     Tool Grid
+     ============================================================ -->
+<section class="hz-container" aria-label="Tool catalog grid">
+
+  {% if page_obj.object_list %}
+
+  <div class="hz-grid" role="list">
+
+    {% for app in page_obj.object_list %}
+    <article class="hz-card" role="listitem">
+
+      <!-- Staff: link to detail page; Public: link directly to tool URL -->
+      {% if user.is_staff %}
+        {% if app.url %}
+        {# Staff indicator that detail link is also available #}
+        <a href="{% url 'tool_detail' app.pk %}"
+           class="hz-card-link"
+           aria-label="View details for {{ app.name }}">
+        {% else %}
+        <a href="{% url 'tool_detail' app.pk %}"
+           class="hz-card-link"
+           aria-label="View details for {{ app.name }}">
+        {% endif %}
+      {% else %}
+        {% if app.url %}
+        <a href="{{ app.url }}"
+           class="hz-card-link"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Open {{ app.name }} (opens in new tab)">
+        {% else %}
+        <div class="hz-card-link" role="group" aria-label="{{ app.name }}">
+        {% endif %}
+      {% endif %}
+
+        <!-- Thumbnail image -->
+        {% if app.hero %}
+        <img src="{{ app.hero.url }}"
+             alt="{{ app.name }} thumbnail"
+             class="hz-card-thumb"
+             loading="lazy">
+        {% else %}
+        <div class="hz-card-thumb-placeholder" role="img" aria-label="{{ app.name }} — no image available">
+          <i class="bi bi-image" aria-hidden="true"></i>
+        </div>
+        {% endif %}
+
+        <!-- Card body -->
+        <div class="hz-card-body">
+
+          <!-- Title -->
+          <h2 class="hz-card-title">{{ app.name }}</h2>
+
+          <!-- Description excerpt -->
+          {% if app.description %}
+          <p class="hz-card-desc">{{ app.description }}</p>
+          {% endif %}
+
+        </div><!-- /.hz-card-body -->
+
+      {% if user.is_staff %}
+      </a>
+      {% else %}
+        {% if app.url %}
+        </a>
+        {% else %}
+        </div>
+        {% endif %}
+      {% endif %}
+
+      <!-- Card footer -->
+      <div class="hz-card-footer">
+        <span class="hz-card-org">
+          {% if app.organization %}
+          <i class="bi bi-building" aria-hidden="true"></i>
+          {{ app.organization.name }}
+          {% else %}
+          <span class="text-meta">No organization</span>
+          {% endif %}
+        </span>
+
+        <span class="hz-card-likes" aria-label="{{ app.like_count }} like{{ app.like_count|pluralize }}">
+          <i class="bi bi-heart" aria-hidden="true"></i>
+          {{ app.like_count }}
+        </span>
+      </div>
+
+      <!-- Staff: pending visibility badge -->
+      {% if user.is_staff and not app.shown %}
+      <div class="hz-staff-indicator">
+        <span class="hz-badge hz-badge-status-pending" title="Not publicly visible">
+          <i class="bi bi-eye-slash" aria-hidden="true"></i> Pending
+        </span>
+      </div>
+      {% endif %}
+
+    </article>
+    {% endfor %}
+
+  </div><!-- /.hz-grid -->
+
+  {% else %}
+
+  <!-- Empty state -->
+  <div class="hz-empty" role="status" aria-live="polite">
+    <div class="hz-empty-icon">
+      <i class="bi bi-search" aria-hidden="true"></i>
+    </div>
+    <h3>No tools found</h3>
+    <p class="text-meta">
+      {% if search_query or sa_filter or region_filter or org_filter %}
+        Try adjusting your search or filters.
+        <a href="{% url 'home' %}">Clear all filters</a>
+      {% else %}
+        No tools are currently available in the catalog.
+        {% if user.is_staff %}
+          <a href="{% url 'add_tool' %}">Add the first tool.</a>
+        {% endif %}
+      {% endif %}
+    </p>
+  </div>
+
+  {% endif %}
+
+  <!-- ============================================================
+       Pagination
+       ============================================================ -->
+  {% if page_obj.paginator.num_pages > 1 %}
+  <nav class="hz-pagination" aria-label="Tool catalog pagination">
+
+    <!-- Build query string without page param -->
+    {% with qs=request.GET.urlencode %}
+
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&{{ qs|cut:'page='|cut:page_obj.number }}"
+       class="hz-page-link"
+       aria-label="Previous page">
+      <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      <span class="visually-hidden">Previous</span>
+    </a>
+    {% else %}
+    <span class="hz-page-link disabled" aria-disabled="true" aria-label="No previous page">
+      <i class="bi bi-chevron-left" aria-hidden="true"></i>
+    </span>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+      <span class="hz-page-link active" aria-current="page" aria-label="Page {{ num }}, current">{{ num }}</span>
+      {% elif num >= page_obj.number|add:"-3" and num <= page_obj.number|add:"3" %}
+      <a href="?page={{ num }}&{{ qs }}" class="hz-page-link" aria-label="Page {{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&{{ qs }}"
+       class="hz-page-link"
+       aria-label="Next page">
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <span class="visually-hidden">Next</span>
+    </a>
+    {% else %}
+    <span class="hz-page-link disabled" aria-disabled="true" aria-label="No next page">
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+    </span>
+    {% endif %}
+
+    {% endwith %}
+  </nav>
+  {% endif %}
+
+</section><!-- /.hz-container -->
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  $(document).ready(function () {
+    initFilterBar();
+  });
+</script>
+{% endblock %}

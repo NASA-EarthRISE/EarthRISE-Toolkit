@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}EarthRISE Toolkit — A catalog of Earth observation and geospatial tools developed by EarthRISE.{% endblock %}">
+  <title>{% block title %}EarthRISE Toolkit{% endblock %}</title>
+
+  <!-- Google Fonts: Inter (headings) + Public Sans (body) — Horizon Design System -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Horizon Design System CSS -->
+  <link rel="stylesheet" href="{% static 'tools/css/horizon.css' %}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Skip Navigation (WCAG 2.0 / Section 508) -->
+  <a href="#main-content" class="hz-skip-link">Skip to main content</a>
+
+  <!-- ========================================================
+       Header / Navigation
+       ======================================================== -->
+  <header class="hz-header" role="banner">
+    <nav class="navbar navbar-expand-lg hz-container" aria-label="Primary navigation">
+      <a class="navbar-brand" href="{% url 'home' %}">
+        <i class="bi bi-globe2" aria-hidden="true"></i>
+        EarthRISE Toolkit
+      </a>
+
+      <button class="navbar-toggler" type="button"
+              data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-1">
+          <li class="nav-item">
+            <a class="nav-link{% if request.resolver_match.url_name == 'home' %} active{% endif %}"
+               href="{% url 'home' %}"
+               {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>
+              <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Tools
+            </a>
+          </li>
+
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a class="nav-link{% if request.resolver_match.url_name == 'add_tool' %} active{% endif %}"
+               href="{% url 'add_tool' %}"
+               {% if request.resolver_match.url_name == 'add_tool' %}aria-current="page"{% endif %}>
+              <i class="bi bi-plus-circle" aria-hidden="true"></i> Add Tool
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">
+              <i class="bi bi-sliders" aria-hidden="true"></i> Admin
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+
+        <!-- Auth status -->
+        <div class="ms-lg-3 mt-2 mt-lg-0 d-flex align-items-center gap-2">
+          {% if user.is_authenticated %}
+            {% if user.is_staff %}
+              <span class="hz-staff-badge" aria-label="Staff account">Staff</span>
+            {% endif %}
+            <span class="text-white-50 small d-none d-lg-inline" aria-label="Signed in as {{ user.username }}">
+              {{ user.username }}
+            </span>
+            <form method="post" action="{% url 'admin:logout' %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-hz btn-hz-sm"
+                      style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85);">
+                Sign&nbsp;Out
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}" class="btn-hz btn-hz-sm"
+               style="background:var(--color-primary);">
+              Staff&nbsp;Sign&nbsp;In
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========================================================
+       Main Content
+       ======================================================== -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- Django messages -->
+    {% if messages %}
+    <div class="hz-container pt-3" role="alert" aria-live="polite">
+      {% for message in messages %}
+      <div class="hz-alert hz-alert-info alert-dismissible" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ========================================================
+       Footer
+       ======================================================== -->
+  <footer class="hz-footer" role="contentinfo">
+    <div class="hz-container">
+      <div class="row align-items-center">
+        <div class="col-md-6 mb-2 mb-md-0">
+          <p class="mb-1">
+            <strong style="color:rgba(255,255,255,0.85);">EarthRISE Toolkit</strong>
+          </p>
+          <p class="mb-0">
+            A catalog of Earth observation and geospatial tools developed by
+            <a href="#" target="_blank" rel="noopener noreferrer">EarthRISE</a>.
+          </p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="mb-0">
+            <a href="https://www.nasa.gov" target="_blank" rel="noopener noreferrer">NASA</a> &middot;
+            <a href="#" target="_blank" rel="noopener noreferrer">EarthRISE</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- jQuery (required before Bootstrap and main.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+          integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+          crossorigin="anonymous"></script>
+
+  <!-- Bootstrap 5 Bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmB27ZBBv3/J2WlUkv3WMKOqEp+T"
+          crossorigin="anonymous"></script>
+
+  <!-- Horizon main JS -->
+  <script src="{% static 'tools/js/main.js' %}"></script>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

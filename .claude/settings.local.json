@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(C:ProgramDataanaconda3envsearthrise-toolkitpython.exe -m pip list)",
+      "Bash(findstr:*)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" -m pip list:*)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" -m pip install Pillow django-import-export)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\manage.py\" makemigrations)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\manage.py\" migrate)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\manage.py\" check)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" --version)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\manage.py\" check --deploy)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\manage.py\" showmigrations tools)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\":*)",
+      "Bash(set:*)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" manage.py shell -c \"from tools.models import Application; print\\(''Models OK:'', Application.objects.count\\(\\), ''records''\\)\")",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" manage.py show_urls)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" manage.py shell:*)",
+      "Bash(dir:*)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" -c \"\nimport os\nroot = r''C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit''\nfor dirpath, dirnames, filenames in os.walk\\(root\\):\n    # Skip hidden/cache dirs\n    dirnames[:] = [d for d in dirnames if d not in \\(''__pycache__'', ''.idea'', ''migrations'', ''node_modules'', ''.git'', ''media''\\)]\n    level = dirpath.replace\\(root, ''''\\).count\\(os.sep\\)\n    indent = ''  '' * level\n    print\\(f''{indent}{os.path.basename\\(dirpath\\)}/''\\)\n    subindent = ''  '' * \\(level + 1\\)\n    for f in filenames:\n        if not f.endswith\\(''.pyc''\\):\n            print\\(f''{subindent}{f}''\\)\n\")",
+      "Bash(del \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\nul\")",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" -c \"import os; p=r''C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\nul''; os.remove\\(p\\) if os.path.exists\\(p\\) else print\\(''not found''\\)\")",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" manage.py check)",
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\manage.py\" makemigrations tools)"
+    ]
+  }
+}

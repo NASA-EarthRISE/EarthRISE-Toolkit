@@ -1,0 +1,533 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add Tool — EarthRISE Toolkit{% endblock %}
+{% block meta_description %}Add a new Earth observation or geospatial tool to the EarthRISE Toolkit catalog.{% endblock %}
+
+{% block content %}
+
+<!-- ============================================================
+     Hero Banner
+     ============================================================ -->
+<section class="hz-hero" aria-labelledby="add-heading">
+  <div class="hz-container">
+    <h1 id="add-heading">
+      <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>Add Tool
+    </h1>
+    <p>Submit a new Earth observation or geospatial tool to the catalog.
+       Newly added tools will be marked as <em>Pending Review</em> until approved by an admin.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     Form
+     ============================================================ -->
+<div class="hz-container mt-4 pb-5">
+  <form id="addToolForm" method="post" enctype="multipart/form-data"
+        novalidate aria-labelledby="add-heading">
+    {% csrf_token %}
+
+    <!-- ======================================================
+         Section 1: Application Identity
+         ====================================================== -->
+    <div class="hz-form-section" role="group" aria-labelledby="section-identity">
+      <div class="hz-form-section-header" id="section-identity">
+        <i class="bi bi-info-circle me-2" aria-hidden="true"></i>Application Identity
+      </div>
+      <div class="hz-form-section-body">
+        <div class="row g-3">
+
+          <!-- Name -->
+          <div class="col-12 col-md-8">
+            <label for="name" class="hz-form-label">
+              Tool Name <span aria-hidden="true" style="color:#dc3545;">*</span>
+            </label>
+            <input type="text" id="name" name="name" class="hz-form-control"
+                   required aria-required="true"
+                   placeholder="Enter the tool name"
+                   aria-describedby="name-hint">
+            <span id="name-hint" class="text-meta" style="font-size:0.75rem;">Required.</span>
+          </div>
+
+          <!-- Display Priority -->
+          <div class="col-12 col-md-4">
+            <label for="display_priority" class="hz-form-label">Display Priority</label>
+            <input type="number" id="display_priority" name="display_priority"
+                   class="hz-form-control" value="10" min="1" max="100"
+                   aria-describedby="priority-hint">
+            <span id="priority-hint" class="text-meta" style="font-size:0.75rem;">
+              Lower = higher on the list.
+            </span>
+          </div>
+
+          <!-- Description -->
+          <div class="col-12">
+            <label for="description" class="hz-form-label">Description</label>
+            <textarea id="description" name="description" class="hz-form-control"
+                      rows="4" placeholder="Brief description of the tool and its purpose…"></textarea>
+          </div>
+
+          <!-- URL -->
+          <div class="col-12 col-md-8">
+            <label for="url" class="hz-form-label">Tool URL</label>
+            <input type="url" id="url" name="url" class="hz-form-control"
+                   placeholder="https://example.com/tool">
+          </div>
+
+          <!-- Organization -->
+          <div class="col-12 col-md-6">
+            <label for="organization" class="hz-form-label">Organization</label>
+            <select id="organization" name="organization" class="hz-form-control"
+                    aria-label="Select the developing organization">
+              <option value="">— Select organization —</option>
+              {% for org in form_options.organization %}
+              <option value="{{ org }}">{{ org }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Hero Image -->
+          <div class="col-12">
+            <label for="hero" class="hz-form-label">Hero / Thumbnail Image</label>
+            <input type="file" id="hero" name="hero" class="hz-form-control"
+                   accept="image/*"
+                   aria-describedby="hero-hint">
+            <span id="hero-hint" class="text-meta" style="font-size:0.75rem;">
+              Recommended: 16:9 ratio, minimum 640×360 px.
+            </span>
+            <!-- Preview -->
+            <div class="mt-2" id="heroPreviewWrapper" style="display:none;">
+              <img id="heroPreview" src="" alt="Hero image preview"
+                   style="max-height:180px; border-radius:var(--radius); border:1px solid var(--color-border);">
+            </div>
+          </div>
+
+        </div><!-- /.row -->
+      </div><!-- /.hz-form-section-body -->
+    </div><!-- /.hz-form-section -->
+
+
+    <!-- ======================================================
+         Section 2: Classification
+         ====================================================== -->
+    <div class="hz-form-section" role="group" aria-labelledby="section-classification">
+      <div class="hz-form-section-header" id="section-classification">
+        <i class="bi bi-tags me-2" aria-hidden="true"></i>Classification
+      </div>
+      <div class="hz-form-section-body">
+        <div class="row g-3">
+
+          <!-- AST PI -->
+          <div class="col-12 col-md-6">
+            <label for="ast_pi_sel" class="hz-form-label">AST Principal Investigator</label>
+            <select id="ast_pi_sel" name="ast_pi" class="hz-form-control">
+              <option value="">— None —</option>
+              {% for sci in form_options.scientists %}
+              <option value="{{ sci }}">{{ sci }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- AST Round -->
+          <div class="col-12 col-md-6">
+            <label for="ast_round" class="hz-form-label">AST Round</label>
+            <input type="number" id="ast_round" name="ast_round" class="hz-form-control"
+                   placeholder="e.g. 5" min="1">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ======================================================
+         Section 3: Technical Stack
+         ====================================================== -->
+    <div class="hz-form-section" role="group" aria-labelledby="section-tech">
+      <div class="hz-form-section-header" id="section-tech">
+        <i class="bi bi-cpu me-2" aria-hidden="true"></i>Technical Stack
+      </div>
+      <div class="hz-form-section-body">
+        <div class="row g-3">
+
+          <!-- Deployment Environments -->
+          <div class="col-12 col-md-6">
+            <label class="hz-form-label" id="label-depenv">
+              Deployment Environments
+              <button type="button" class="btn-hz btn-hz-sm ms-2"
+                      style="background:var(--color-primary);font-size:0.625rem;padding:2px 8px;"
+                      data-bs-toggle="modal" data-bs-target="#quickCreateModal"
+                      data-ms-type="deployment_environment"
+                      aria-label="Quick-create new deployment environment">
+                + New
+              </button>
+            </label>
+            <div id="ms-depenv" aria-labelledby="label-depenv"></div>
+            <input type="hidden" id="id_deployment_environment_hidden" name="deployment_environment">
+          </div>
+
+          <!-- Platform Description -->
+          <div class="col-12 col-md-6">
+            <label for="platform_description" class="hz-form-label">Platform Description</label>
+            <textarea id="platform_description" name="platform_description"
+                      class="hz-form-control" rows="3"
+                      placeholder="Describe the platform (cloud provider, language, frameworks…)"></textarea>
+          </div>
+
+          <!-- Deployment Notes -->
+          <div class="col-12">
+            <label for="deployment_env_further_details" class="hz-form-label">
+              Deployment Notes
+            </label>
+            <textarea id="deployment_env_further_details" name="deployment_env_further_details"
+                      class="hz-form-control" rows="3"
+                      placeholder="Further details about deployment environment, access, etc."></textarea>
+          </div>
+
+          <!-- Code Repo URL -->
+          <div class="col-12 col-md-6">
+            <label for="code_repo_url" class="hz-form-label">Code Repository URL</label>
+            <input type="url" id="code_repo_url" name="code_repo_url" class="hz-form-control"
+                   placeholder="https://github.com/…">
+          </div>
+
+          <!-- Design Docs URL -->
+          <div class="col-12 col-md-6">
+            <label for="design_documentation_url" class="hz-form-label">
+              Design Documentation URL
+            </label>
+            <input type="url" id="design_documentation_url" name="design_documentation_url"
+                   class="hz-form-control" placeholder="https://…">
+          </div>
+
+          <!-- Datasets -->
+          <div class="col-12 col-md-6">
+            <label class="hz-form-label" id="label-datasets">
+              Datasets
+              <button type="button" class="btn-hz btn-hz-sm ms-2"
+                      style="background:var(--color-primary);font-size:0.625rem;padding:2px 8px;"
+                      data-bs-toggle="modal" data-bs-target="#quickCreateModal"
+                      data-ms-type="dataset"
+                      aria-label="Quick-create new dataset">
+                + New
+              </button>
+            </label>
+            <div id="ms-datasets" aria-labelledby="label-datasets"></div>
+            <input type="hidden" id="id_datasets_hidden" name="datasets">
+          </div>
+
+          <!-- Application Components -->
+          <div class="col-12 col-md-6">
+            <label class="hz-form-label" id="label-components">
+              Application Components
+              <button type="button" class="btn-hz btn-hz-sm ms-2"
+                      style="background:var(--color-primary);font-size:0.625rem;padding:2px 8px;"
+                      data-bs-toggle="modal" data-bs-target="#quickCreateModal"
+                      data-ms-type="application_component"
+                      aria-label="Quick-create new application component">
+                + New
+              </button>
+            </label>
+            <div id="ms-components" aria-labelledby="label-components"></div>
+            <input type="hidden" id="id_application_components_hidden" name="application_components">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ======================================================
+         Section 4: Teams
+         ====================================================== -->
+    <div class="hz-form-section" role="group" aria-labelledby="section-teams">
+      <div class="hz-form-section-header" id="section-teams">
+        <i class="bi bi-people me-2" aria-hidden="true"></i>Teams
+      </div>
+      <div class="hz-form-section-body">
+        <div class="row g-3">
+
+          <!-- Scientists -->
+          <div class="col-12 col-md-6">
+            <label class="hz-form-label" id="label-scientists">
+              Research Scientists
+              <button type="button" class="btn-hz btn-hz-sm ms-2"
+                      style="background:var(--color-primary);font-size:0.625rem;padding:2px 8px;"
+                      data-bs-toggle="modal" data-bs-target="#quickCreateModal"
+                      data-ms-type="scientist"
+                      aria-label="Quick-create new scientist">
+                + New
+              </button>
+            </label>
+            <div id="ms-scientists" aria-labelledby="label-scientists"></div>
+            <input type="hidden" id="id_scientists_hidden" name="scientists">
+          </div>
+
+          <!-- Developers -->
+          <div class="col-12 col-md-6">
+            <label class="hz-form-label" id="label-developers">
+              Developers
+              <button type="button" class="btn-hz btn-hz-sm ms-2"
+                      style="background:var(--color-primary);font-size:0.625rem;padding:2px 8px;"
+                      data-bs-toggle="modal" data-bs-target="#quickCreateModal"
+                      data-ms-type="developer"
+                      aria-label="Quick-create new developer">
+                + New
+              </button>
+            </label>
+            <div id="ms-developers" aria-labelledby="label-developers"></div>
+            <input type="hidden" id="id_developers_hidden" name="developers">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ======================================================
+         Submit / Cancel
+         ====================================================== -->
+    <div class="d-flex gap-3 align-items-center">
+      <button type="submit" class="btn-hz btn-hz-primary"
+              aria-label="Submit new tool to catalog">
+        <i class="bi bi-check2-circle me-1" aria-hidden="true"></i> Save Tool
+      </button>
+      <a href="{% url 'home' %}" class="btn-hz"
+         style="background:var(--color-text-meta);"
+         aria-label="Cancel and return to catalog">
+        Cancel
+      </a>
+      <p class="text-meta mb-0 ms-2" aria-live="polite" id="form-status"></p>
+    </div>
+
+  </form>
+</div><!-- /.hz-container -->
+
+
+<!-- ============================================================
+     Quick-Create Modal
+     ============================================================ -->
+<div class="modal fade hz-modal" id="quickCreateModal" tabindex="-1"
+     aria-labelledby="quickCreateModalLabel" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2 class="modal-title" id="quickCreateModalLabel">Create New Item</h2>
+        <button type="button" class="btn-close btn-close-white"
+                data-bs-dismiss="modal" aria-label="Close dialog"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="quickCreateForm" novalidate aria-labelledby="quickCreateModalLabel">
+          <input type="hidden" id="quickCreateType" value="">
+
+          <div class="mb-3">
+            <label for="quickCreateName" class="hz-form-label">
+              Name <span aria-hidden="true" style="color:#dc3545;">*</span>
+            </label>
+            <input type="text" id="quickCreateName" class="hz-form-control"
+                   required aria-required="true" placeholder="Enter name">
+          </div>
+
+          <div class="mb-3" id="quickCreateDescGroup">
+            <label for="quickCreateDesc" class="hz-form-label">Description</label>
+            <textarea id="quickCreateDesc" class="hz-form-control" rows="2"
+                      placeholder="Optional description"></textarea>
+          </div>
+
+          <div class="mb-3" id="quickCreateUrlGroup" style="display:none;">
+            <label for="quickCreateUrl" class="hz-form-label">URL</label>
+            <input type="url" id="quickCreateUrl" class="hz-form-control"
+                   placeholder="https://…">
+          </div>
+
+          <div class="mb-3" id="quickCreateOrgGroup" style="display:none;">
+            <label for="quickCreateOrg" class="hz-form-label">Organization</label>
+            <input type="text" id="quickCreateOrg" class="hz-form-control"
+                   placeholder="Organization name">
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-hz"
+                style="background:var(--color-text-meta);"
+                data-bs-dismiss="modal"
+                aria-label="Cancel and close dialog">
+          Cancel
+        </button>
+        <button type="button" id="quickCreateSave" class="btn-hz btn-hz-primary"
+                aria-label="Save new item">
+          <i class="bi bi-check2" me-1 aria-hidden="true"></i> Save
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function () {
+  'use strict';
+
+  var csrfToken = '{{ csrf_token }}';
+  var opts = {{ form_options_json|safe }};
+
+  /* ----------------------------------------------------------
+     Hero image preview
+     ---------------------------------------------------------- */
+  initHeroPreview('hero', 'heroPreview');
+  $('#hero').on('change', function () {
+    if (this.files[0]) {
+      $('#heroPreviewWrapper').show();
+    } else {
+      $('#heroPreviewWrapper').hide();
+    }
+  });
+
+  /* ----------------------------------------------------------
+     Initialise MultiSelect widgets
+     ---------------------------------------------------------- */
+  var msDepEnv = new MultiSelect({
+    containerId:   'ms-depenv',
+    hiddenInputId: 'id_deployment_environment_hidden',
+    options:       opts.deployment_environment,
+    label:         'Deployment Environments',
+    allowNew:      true,
+  });
+
+  var msDatasets = new MultiSelect({
+    containerId:   'ms-datasets',
+    hiddenInputId: 'id_datasets_hidden',
+    options:       opts.datasets,
+    label:         'Datasets',
+  });
+
+  var msComponents = new MultiSelect({
+    containerId:   'ms-components',
+    hiddenInputId: 'id_application_components_hidden',
+    options:       opts.application_components,
+    label:         'Application Components',
+  });
+
+  var msScientists = new MultiSelect({
+    containerId:   'ms-scientists',
+    hiddenInputId: 'id_scientists_hidden',
+    options:       opts.scientists,
+    label:         'Research Scientists',
+  });
+
+  var msDevelopers = new MultiSelect({
+    containerId:   'ms-developers',
+    hiddenInputId: 'id_developers_hidden',
+    options:       opts.developers,
+    label:         'Developers',
+  });
+
+  /* ----------------------------------------------------------
+     Quick-Create Modal — type-dependent fields
+     ---------------------------------------------------------- */
+  var qcTypeMap = {
+    'deployment_environment': { url: false, org: false, desc: true },
+    'dataset':                { url: true,  org: false, desc: true },
+    'application_component':  { url: false, org: false, desc: true },
+    'scientist':              { url: false, org: true,  desc: false },
+    'developer':              { url: false, org: true,  desc: false },
+  };
+
+  // Store reference to the triggering multiselect widget
+  var activeQcWidget = null;
+
+  $('[data-ms-type]').on('click', function () {
+    var type = $(this).data('ms-type');
+    $('#quickCreateType').val(type);
+    $('#quickCreateForm')[0].reset();
+
+    var cfg = qcTypeMap[type] || {};
+    $('#quickCreateUrlGroup').toggle(!!cfg.url);
+    $('#quickCreateOrgGroup').toggle(!!cfg.org);
+    $('#quickCreateDescGroup').toggle(!!cfg.desc);
+
+    // Which widget receives the new value?
+    switch (type) {
+      case 'deployment_environment': activeQcWidget = msDepEnv; break;
+      case 'dataset':                activeQcWidget = msDatasets; break;
+      case 'application_component':  activeQcWidget = msComponents; break;
+      case 'scientist':              activeQcWidget = msScientists; break;
+      case 'developer':              activeQcWidget = msDevelopers; break;
+      default:                       activeQcWidget = null;
+    }
+  });
+
+  /* ----------------------------------------------------------
+     Quick-Create Save
+     ---------------------------------------------------------- */
+  $('#quickCreateSave').on('click', function () {
+    var type = $('#quickCreateType').val();
+    var name = $('#quickCreateName').val().trim();
+    if (!name) {
+      $('#quickCreateName').addClass('is-invalid');
+      if (!$('#quickCreateName').next('.invalid-feedback').length) {
+        $('#quickCreateName').after('<div class="invalid-feedback d-block">Name is required.</div>');
+      }
+      return;
+    }
+
+    var data = { csrfmiddlewaretoken: csrfToken, name: name };
+    var cfg  = qcTypeMap[type] || {};
+    if (cfg.desc) data.description  = $('#quickCreateDesc').val().trim();
+    if (cfg.url)  data.url          = $('#quickCreateUrl').val().trim();
+    if (cfg.org)  data.organization = $('#quickCreateOrg').val().trim();
+
+    $.post('/quick-create/' + type + '/', data)
+      .done(function (resp) {
+        if (resp.success) {
+          if (activeQcWidget) {
+            activeQcWidget.options.push(resp.name);
+            activeQcWidget.selected.push(resp.name);
+            activeQcWidget._filteredOpts = [...activeQcWidget.options];
+            activeQcWidget._updateDisplay();
+          }
+          bootstrap.Modal.getInstance(document.getElementById('quickCreateModal')).hide();
+          $('#quickCreateForm')[0].reset();
+        } else {
+          var msg = Object.values(resp.errors || {name: ['Unknown error.']}).flat().join(' ');
+          $('#quickCreateName').addClass('is-invalid');
+          $('#quickCreateName').after('<div class="invalid-feedback d-block">' + $('<div>').text(msg).html() + '</div>');
+        }
+      })
+      .fail(function () {
+        alert('Server error. Please try again.');
+      });
+  });
+
+  // Clear validation state on modal hide
+  $('#quickCreateModal').on('hide.bs.modal', function () {
+    $('.is-invalid').removeClass('is-invalid');
+    $('.invalid-feedback').remove();
+  });
+
+  /* ----------------------------------------------------------
+     Form validation before submit
+     ---------------------------------------------------------- */
+  $('#addToolForm').on('submit', function (e) {
+    var name = $('#name').val().trim();
+    if (!name) {
+      e.preventDefault();
+      $('#name').addClass('is-invalid').focus();
+      if (!$('#name').next('.invalid-feedback').length) {
+        $('#name').after('<div class="invalid-feedback d-block">Tool name is required.</div>');
+      }
+      $('#form-status').text('Please fix the errors above before submitting.');
+    }
+  });
+
+});
+</script>
+{% endblock %}
