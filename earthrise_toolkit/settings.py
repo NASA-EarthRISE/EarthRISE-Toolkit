@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-m^=5v27(r53xe8l)%!_4zra@a9e0jls=7^6jgrsg7b_h)md8y!"
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-m^=5v27(r53xe8l)%!_4zra@a9e0jls=7^6jgrsg7b_h)md8y!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=lambda v: [h.strip() for h in v.split(',') if h.strip()])
 
 
 # Application definition
@@ -114,18 +115,37 @@ USE_I18N = True
 USE_TZ = True
 
 
+# ---------------------------------------------------------------------------
+# Sub-path deployment (e.g. /earthrise-toolkit in production, empty for dev)
+# Set SCRIPT_NAME=/earthrise-toolkit in the production .env file.
+# ---------------------------------------------------------------------------
+SCRIPT_NAME = config('SCRIPT_NAME', default='')
+if SCRIPT_NAME:
+    FORCE_SCRIPT_NAME = SCRIPT_NAME
+    # Trust nginx's X-Forwarded-* headers only when behind the proxy
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# CSRF trusted origins — required for Django 4.0+ HTTPS POST requests.
+# Set to the full scheme+host in the production .env, e.g.:
+#   CSRF_TRUSTED_ORIGINS=https://science.data.nasa.gov
+_csrf_origins = config('CSRF_TRUSTED_ORIGINS', default='')
+if _csrf_origins:
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_origins.split(',') if o.strip()]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = f"{SCRIPT_NAME}/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Media files (user-uploaded content)
-MEDIA_URL = "/media/"
+MEDIA_URL = f"{SCRIPT_NAME}/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Authentication
-LOGIN_URL = "/admin/login/"
+LOGIN_URL = f"{SCRIPT_NAME}/admin/login/"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
