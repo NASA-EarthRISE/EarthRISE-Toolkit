@@ -251,7 +251,7 @@ class Link(models.Model):
 class ExternalApp(models.Model):
     url = models.URLField(max_length=255, help_text="Primary URL of the application", blank=True)
     name = models.CharField(help_text="Application name", max_length=250)
-    description = models.TextField(help_text="Brief description. Why is the app relevant for SERVIR?", blank=True)
+    description = models.TextField(help_text="Brief description. Why is the app relevant for EarthRISE?", blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ExternalApps')
     date_added = models.DateTimeField(auto_now_add=True)
 

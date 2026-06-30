@@ -1,6 +1,6 @@
 # EarthRISE Toolkit
 
-A Django-based catalog for Earth observation and geospatial decision-support tools developed by SERVIR. The application provides a filterable, searchable, and pageable grid of tool thumbnails built with Bootstrap 5, jQuery, and the [NASA Horizon Design System](https://website.nasa.gov/horizon-design-system/).
+A Django-based catalog for Earth observation and geospatial decision-support tools developed by EarthRISE. The application provides a filterable, searchable, and pageable grid of tool thumbnails built with Bootstrap 5, jQuery, and the [NASA Horizon Design System](https://website.nasa.gov/horizon-design-system/).
 
 ---
 
@@ -78,9 +78,7 @@ EarthRISE_Toolkit/
 |-------|-------------|
 | `Application` | Core tool record — name, description, URL, hero image, all metadata |
 | `Organization` | Developing organization |
-| `ServiceArea` | SERVIR service area classification |
 | `Service` | Individual service within a service area |
-| `Region` | SERVIR geographic region |
 | `Dataset` | Datasets used by the tool |
 | `ApplicationComponent` | Tech stack components |
 | `DeploymentEnvironment` | Where the tool is deployed |
@@ -226,4 +224,4 @@ For production, override these settings (via environment variables or a `.env` f
 
 ## License
 
-Internal use — SERVIR / NASA / USAID.
+Internal use — EarthRISE / NASA .
