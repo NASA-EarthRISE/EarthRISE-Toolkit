@@ -1,5 +1,9 @@
 # EarthRISE Toolkit
 
+[![Python: 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![EarthRISE: Development](https://img.shields.io/badge/EarthRISE-Development-b50000?labelColor=191f4c)](https://appliedsciences.nasa.gov/what-we-do/capacity-building/develop)
+
 A Django-based catalog for Earth observation and geospatial decision-support tools developed by EarthRISE. The application provides a filterable, searchable, and pageable grid of tool thumbnails built with Bootstrap 5, jQuery, and the [NASA Horizon Design System](https://website.nasa.gov/horizon-design-system/).
 
 ---
