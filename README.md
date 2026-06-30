@@ -224,4 +224,5 @@ For production, override these settings (via environment variables or a `.env` f
 
 ## License
 
-Internal use — EarthRISE / NASA .
+The EarthRISE Toolkit is distributed by EarthRISE under the terms of the MIT License. See
+[LICENSE](https://github.com/NASA-EarthRISE/EarthRISE-Toolkit/blob/main/LICENSE) in this directory for more information.
