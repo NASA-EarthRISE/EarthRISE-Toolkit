@@ -1,276 +1,404 @@
-/*
- * EarthRISE Toolkit — Horizon Design System Stylesheet
- * Follows NASA Horizon Design System guidelines
- * WCAG 2.0 / Section 508 compliant
- */
+/* =============================================================
+   EarthRISE Toolkit — App-specific overrides for HDS Core v0.8.0
+   Loaded after hds.min.css.
+   Uses HDS CSS custom properties wherever possible.
+   ============================================================= */
 
-/* ============================================================
-   CSS Custom Properties (Design Tokens)
-   ============================================================ */
-:root {
-  --color-primary:   #0170B9;
-  --color-action:    #1c67e3;
-  --color-hover:     #f64137;
-  --color-dark:      #2e2e32;
-  --color-text:      #3a3a3a;
-  --color-text-meta: #58585b;
-  --color-bg:        #F5F5F5;
-  --color-surface:   #FFFFFF;
-  --color-border:    #dddddd;
-  --color-focus:     #444447;
-  --radius:          4px;
-  --shadow-card:     0px 0px 4px 0 rgba(0, 0, 0, 0.34);
-  --shadow-menu:     0px 4px 10px -2px rgba(0, 0, 0, 0.1);
-  --container:       1200px;
-  --font-body:       'Public Sans', sans-serif;
-  --font-heading:    'Inter', sans-serif;
+/* ------------------------------------------------------------------ */
+/*  Bootstrap-compatible spacing / display utilities (minimal subset)  */
+/* ------------------------------------------------------------------ */
+
+/* margin-end */
+.me-1 { margin-inline-end: 0.25rem; }
+.me-2 { margin-inline-end: 0.5rem; }
+
+/* display */
+.d-none  { display: none !important; }
+.d-inline { display: inline !important; }
+.d-flex  { display: flex !important; }
+
+/* responsive display */
+@media (min-width: 992px) {
+  .d-lg-inline { display: inline !important; }
 }
 
-/* ============================================================
-   Global Reset & Base
-   ============================================================ */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+
+/* ------------------------------------------------------------------ */
+/*  Base layout                                                         */
+/* ------------------------------------------------------------------ */
 
 html {
-  font-size: 16px;
   scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.65em;
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  background-color: var(--hds-color-carbon-05, #f6f6f6);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ============================================================
-   Focus Accessibility (WCAG 2.0 / Section 508)
-   ============================================================ */
-:focus {
-  outline: 2px dotted var(--color-focus);
-  outline-offset: 2px;
+main {
+  flex: 1 0 auto;
 }
 
-:focus:not(:focus-visible) {
-  outline: none;
-}
+/* ------------------------------------------------------------------ */
+/*  Container                                                           */
+/* ------------------------------------------------------------------ */
 
-:focus-visible {
-  outline: 2px dotted var(--color-focus);
-  outline-offset: 2px;
-}
-
-/* ============================================================
-   Typography
-   ============================================================ */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--color-text);
-  margin-top: 0;
-}
-
-h1 { font-size: 2.25rem; font-weight: 700; }
-h2 { font-size: 1.875rem; font-weight: 500; }
-h3 { font-size: 1.5rem; font-weight: 500; }
-h4 { font-size: 1.25rem; font-weight: 500; }
-h5 { font-size: 1.125rem; font-weight: 600; }
-h6 { font-size: 1rem; font-weight: 600; }
-
-a {
-  color: var(--color-primary);
-  text-decoration: underline;
-}
-
-a:hover {
-  color: var(--color-hover);
-}
-
-/* ============================================================
-   Layout Container
-   ============================================================ */
 .hz-container {
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: 0 1rem;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
 }
 
-/* ============================================================
-   Header / Navigation
-   ============================================================ */
-.hz-header {
-  background: var(--color-dark);
-  color: #ffffff;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+/* ------------------------------------------------------------------ */
+/*  Site Header — overrides to USWDS usa-header                        */
+/* ------------------------------------------------------------------ */
+
+.hz-site-header {
+  background-color: var(--hds-color-carbon-80, #2e2e32);
+  border-bottom: 3px solid var(--hds-color-nasa-blue, #1c67e3);
 }
 
-.hz-header .navbar-brand {
-  font-family: var(--font-heading);
+/* nav-container max-width to match our container */
+.hz-site-header .usa-nav-container {
+  max-width: 1200px;
+}
+
+/* Logo text */
+.hz-site-header .usa-logo__text a {
+  color: var(--hds-color-spacesuit-white, #fff);
+  font-family: var(--hds-font-family-heading);
+  font-size: 1.1rem;
   font-weight: 700;
-  font-size: 1.125rem;
-  color: #ffffff !important;
+  letter-spacing: -0.02em;
   text-decoration: none;
+}
+
+.hz-site-header .usa-logo__text a:hover {
+  color: var(--hds-color-carbon-20, #d1d1d1);
+}
+
+/* Nav links */
+.hz-site-header .usa-nav__primary > .usa-nav__primary-item > a {
+  color: var(--hds-color-spacesuit-white, #fff);
+  font-weight: 500;
+}
+
+.hz-site-header .usa-nav__primary > .usa-nav__primary-item > a:hover,
+.hz-site-header .usa-nav__primary > .usa-nav__primary-item > a.usa-current {
+  color: var(--hds-color-spacesuit-white, #fff);
+  background-color: rgba(28, 103, 227, 0.2);
+}
+
+.hz-site-header .usa-nav__primary > .usa-nav__primary-item > a.usa-current {
+  border-bottom: 2px solid var(--hds-color-nasa-blue, #1c67e3);
+}
+
+/* Mobile menu button */
+.hz-site-header .usa-menu-btn {
+  color: var(--hds-color-spacesuit-white, #fff);
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 0.875rem;
+}
+
+/* Auth area */
+.hz-nav-auth {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.hz-header .nav-link {
-  font-family: var(--font-heading);
-  color: rgba(255, 255, 255, 0.85) !important;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  padding: 0.5rem 0.75rem !important;
-  border-radius: var(--radius);
-  transition: background 0.15s, color 0.15s;
-}
-
-.hz-header .nav-link:hover,
-.hz-header .nav-link:focus {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff !important;
-}
-
-.hz-header .nav-link.active {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.hz-header .navbar-toggler {
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.hz-header .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  gap: 0.75rem;
 }
 
 .hz-staff-badge {
-  display: inline-block;
-  background: var(--color-primary);
-  color: #ffffff;
-  font-size: 0.6875rem;
+  background-color: var(--hds-color-nasa-blue, #1c67e3);
+  color: #fff;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.075em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 2px 8px;
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  vertical-align: middle;
+  border-radius: 2px;
 }
 
-/* ============================================================
-   Hero Banner
-   ============================================================ */
-.hz-hero {
-  background: var(--color-dark);
-  color: #ffffff;
-  padding: 3rem 0 2.5rem;
-  border-bottom: 3px solid var(--color-primary);
-}
-
-.hz-hero h1 {
-  color: #ffffff;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.hz-hero p {
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 1rem;
-  margin-bottom: 0;
-}
-
-/* ============================================================
-   Filter / Search Bar
-   ============================================================ */
-.hz-filter-bar {
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  padding: 1rem 0;
-  box-shadow: var(--shadow-menu);
-}
-
-.hz-filter-bar .form-control,
-.hz-filter-bar .form-select {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  font-family: var(--font-body);
+.hz-nav-username {
+  color: var(--hds-color-carbon-20, #d1d1d1);
   font-size: 0.875rem;
-  color: var(--color-text);
-  transition: background 0.15s, border-color 0.15s;
 }
 
-.hz-filter-bar .form-control:focus,
-.hz-filter-bar .form-select:focus {
-  background: var(--color-surface);
-  border-color: var(--color-focus);
-  outline: 1px dotted var(--color-focus);
-  box-shadow: none;
+.hz-btn-nav {
+  font-size: 0.875rem;
+  padding-block: 0.375rem;
+  padding-inline: 0.75rem;
+  color: var(--hds-color-carbon-20, #d1d1d1) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-.hz-filter-bar label {
-  font-size: 0.6875rem;
-  color: var(--color-text-meta);
-  text-transform: uppercase;
-  letter-spacing: 0.0625rem;
-  font-family: var(--font-body);
-  font-weight: 600;
+.hz-btn-nav:hover {
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  USWDS Footer customizations                                         */
+/* ------------------------------------------------------------------ */
+
+.usa-footer[data-hds-palette="dark"],
+.usa-footer[data-hds-palette="dark"] .usa-footer__secondary-section {
+  /* USWDS overrides secondary-section background; re-apply dark theme explicitly */
+  background-color: var(--hds-color-carbon-90, #17171b);
+}
+
+.usa-footer[data-hds-palette="dark"] {
+  border-top: 3px solid var(--hds-color-nasa-blue, #1c67e3);
+}
+
+/* Manually replicate a few USWDS grid helpers for the footer */
+.usa-footer__primary-section .grid-row,
+.usa-footer__secondary-section .grid-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.usa-footer__primary-container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  padding-block: 1.5rem;
+}
+
+.usa-footer__secondary-section .grid-container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.grid-col-auto { flex: 0 0 auto; }
+
+.usa-footer__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-block: 1.5rem;
+}
+
+.usa-footer__logo-heading {
+  color: #fff;
+  font-family: var(--hds-font-family-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.usa-footer__logo-tagline {
+  color: var(--hds-color-carbon-40, #959599);
+  font-size: 0.8rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.usa-footer__primary-link {
+  color: var(--hds-color-carbon-20, #d1d1d1);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.usa-footer__primary-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.usa-footer__nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.usa-footer__primary-content {
+  list-style: none;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Messages container                                                  */
+/* ------------------------------------------------------------------ */
+
+.hz-messages-container {
+  max-width: 1200px;
+  margin-inline: auto;
+  margin-block-start: 1rem;
+  padding-inline: 1.5rem;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Hero Banner                                                         */
+/* ------------------------------------------------------------------ */
+
+.hz-hero {
+  background-color: var(--hds-color-carbon-90, #17171b);
+  border-bottom: 3px solid var(--hds-color-nasa-blue, #1c67e3);
+  padding-block: 3rem;
+}
+
+.hz-hero .hz-container {
+  max-width: 1200px;
+}
+
+/* Override USWDS usa-hero styles for our layout */
+.usa-hero.hz-hero {
+  background-image: none;
+  background-color: var(--hds-color-carbon-90, #17171b);
+}
+
+.usa-hero.hz-hero .usa-hero__callout {
+  background-color: transparent;
+  max-width: 860px;
+  padding-inline: 1.5rem;
+  padding-block: 3rem;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.usa-hero.hz-hero .usa-hero__heading {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  color: #fff;
+  margin-block-end: 0.5rem;
+}
+
+.usa-hero.hz-hero .usa-hero__heading--alt {
+  color: var(--hds-color-nasa-blue-tint, #288bff);
   display: block;
-  margin-bottom: 0.25rem;
 }
 
-/* ============================================================
-   Tool Grid
-   ============================================================ */
+.usa-hero.hz-hero p {
+  color: var(--hds-color-carbon-20, #d1d1d1);
+  font-size: 1rem;
+  margin-block-end: 1.5rem;
+  max-width: 640px;
+}
+
+/* Small hero (add_tool page) */
+.hz-hero--sm {
+  padding-block: 2rem;
+}
+
+.hz-hero--sm h1 {
+  color: #fff;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  margin-block-end: 0.5rem;
+}
+
+.hz-hero--sm p {
+  color: var(--hds-color-carbon-20, #d1d1d1);
+  font-size: 1rem;
+  max-width: 640px;
+  margin: 0;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Filter / Search Bar                                                 */
+/* ------------------------------------------------------------------ */
+
+.hz-filter-bar {
+  background-color: var(--hds-color-spacesuit-white, #fff);
+  border-bottom: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+  padding-block: 1.25rem;
+}
+
+.hz-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem 1.5rem;
+}
+
+.hz-filter-search {
+  flex: 1 1 300px;
+}
+
+.hz-filter-org {
+  flex: 0 1 220px;
+}
+
+.hz-filter-clear {
+  flex: 0 0 auto;
+  padding-block-start: 1.5rem;
+}
+
+.hz-results-meta {
+  margin-block-start: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--hds-color-carbon-60, #58585b);
+  font-family: var(--hds-font-family-body);
+}
+
+/* USWDS usa-search adjustments */
+.usa-search .usa-input {
+  height: 2.5rem;
+}
+
+.usa-search .usa-button {
+  height: 2.5rem;
+  padding-inline: 0.875rem;
+}
+
+.usa-search__submit-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  filter: brightness(0) invert(1);
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Tool Catalog Grid                                                   */
+/* ------------------------------------------------------------------ */
+
+.hz-catalog-section {
+  padding-block: 2rem;
+}
+
 .hz-grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
-  padding: 1.5rem 0;
 }
 
-@media (min-width: 576px) {
-  .hz-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (min-width: 992px) {
+@media (max-width: 1100px) {
   .hz-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-@media (min-width: 1200px) {
-  .hz-grid { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 720px) {
+  .hz-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ============================================================
-   Tool Card (Thumbnail)
-   ============================================================ */
+@media (max-width: 480px) {
+  .hz-grid { grid-template-columns: 1fr; }
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Tool Card                                                           */
+/* ------------------------------------------------------------------ */
+
 .hz-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
+  position: relative;
+  background: var(--hds-color-spacesuit-white, #fff);
+  border: 1px solid var(--hds-color-carbon-10, #e3e3e3);
   display: flex;
   flex-direction: column;
-  transition: box-shadow 0.15s, transform 0.15s;
-  position: relative;
+  transition: box-shadow 0.15s ease;
 }
 
 .hz-card:hover {
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.18);
-  transform: translateY(-2px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  border-color: var(--hds-color-nasa-blue, #1c67e3);
 }
 
 .hz-card-link {
@@ -281,320 +409,675 @@ a:hover {
   color: inherit;
 }
 
-.hz-card-link:hover,
-.hz-card-link:focus {
-  text-decoration: none;
-  color: inherit;
-}
-
-.hz-card-link:focus {
-  outline: 2px dotted var(--color-focus);
+.hz-card-link:focus-visible {
+  outline: 2px dashed var(--hds-color-carbon-70, #444447);
   outline-offset: 2px;
 }
 
+/* Card thumbnail */
 .hz-card-thumb {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+  display: block;
+  background-color: var(--hds-color-carbon-10, #e3e3e3);
 }
 
 .hz-card-thumb-placeholder {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, #e8edf2 0%, #cdd5de 100%);
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-meta);
-  font-size: 2.5rem;
+  background-color: var(--hds-color-carbon-05, #f6f6f6);
+  object-fit: none; /* keep SVG at natural size, centered */
+  object-position: center;
+  padding: 1.5rem;
 }
 
+/* Card body */
 .hz-card-body {
-  padding: 0.875rem 1rem;
   flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.hz-card-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.hz-badge {
-  display: inline-block;
-  font-family: var(--font-body);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 2px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-  background: rgba(1, 112, 185, 0.07);
-  white-space: nowrap;
-}
-
-.hz-badge-status-shown {
-  border-color: #198754;
-  color: #198754;
-  background: rgba(25, 135, 84, 0.07);
-}
-
-.hz-badge-status-pending {
-  border-color: #fd7e14;
-  color: #c05c00;
-  background: rgba(253, 126, 20, 0.08);
+  padding: 0.875rem 1rem 0.5rem;
 }
 
 .hz-card-title {
-  font-family: var(--font-heading);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.375rem;
-  line-height: 1.35;
+  font-family: var(--hds-font-family-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--hds-color-carbon-90, #17171b);
+  margin: 0 0 0.375rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .hz-card-desc {
-  font-size: 0.8125rem;
-  color: var(--color-text-meta);
+  font-size: 0.8rem;
+  color: var(--hds-color-carbon-60, #58585b);
   line-height: 1.5;
-  flex: 1;
-  /* Clamp to 3 lines */
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
+/* Card footer */
 .hz-card-footer {
-  padding: 0.625rem 1rem;
-  background: var(--color-bg);
-  border-top: 1px solid var(--color-border);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  font-size: 0.75rem;
-  color: var(--color-text-meta);
+  align-items: center;
+  padding: 0.5rem 1rem 0.75rem;
+  border-top: 1px solid var(--hds-color-carbon-05, #f6f6f6);
+  margin-block-start: auto;
 }
 
 .hz-card-org {
+  font-size: 0.7rem;
   font-weight: 600;
+  color: var(--hds-color-carbon-60, #58585b);
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 60%;
+  max-width: 70%;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .hz-card-likes {
+  font-size: 0.75rem;
+  color: #767679; /* darkened from #77777a for WCAG 1.4.3: #767679 on white ≈ 4.52:1 */
   display: flex;
   align-items: center;
-  gap: 0.2rem;
-  color: var(--color-text-meta);
+  gap: 0.25rem;
+  flex-shrink: 0;
 }
 
-/* Staff-only overlay indicator */
-.hz-staff-indicator {
+/* Pending badge on card */
+.hz-card-badge {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  z-index: 2;
 }
 
-/* ============================================================
-   Buttons
-   ============================================================ */
-.btn-hz {
-  display: inline-block;
-  background: var(--color-text);
-  color: #ffffff;
-  border: none;
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 600;
-  padding: 0.625rem 1.5rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.15s, border-color 0.15s;
-  letter-spacing: 0.01em;
+
+/* ------------------------------------------------------------------ */
+/*  USWDS Tag overrides                                                 */
+/* ------------------------------------------------------------------ */
+
+.hz-tag-pending {
+  background-color: var(--hds-color-carbon-60, #58585b);
+  color: #fff;
+  font-size: 0.65rem;
 }
 
-.btn-hz:hover,
-.btn-hz:focus {
-  background: var(--color-hover);
-  color: #ffffff;
-  text-decoration: none;
+.hz-tag-published {
+  background-color: var(--hds-color-nasa-blue, #1c67e3);
+  color: #fff;
 }
 
-.btn-hz:focus {
-  outline: 2px dotted var(--color-focus);
-  outline-offset: 2px;
+.hz-tag-warning {
+  background-color: #b84f0e; /* darkened from #ea6f24 for WCAG 1.4.3: white on #b84f0e ≈ 5.0:1 */
+  color: #fff;
 }
 
-.btn-hz-primary {
-  background: var(--color-primary);
+
+/* ------------------------------------------------------------------ */
+/*  Empty state                                                         */
+/* ------------------------------------------------------------------ */
+
+.hz-empty {
+  text-align: center;
+  padding-block: 4rem;
+  color: var(--hds-color-carbon-60, #58585b);
 }
 
-.btn-hz-primary:hover,
-.btn-hz-primary:focus {
-  background: #015a97;
-  color: #ffffff;
+.hz-empty-icon {
+  font-size: 3rem;
+  color: var(--hds-color-carbon-30, #b9b9bb);
+  margin-block-end: 1rem;
 }
 
-.btn-hz-outline {
-  background: transparent;
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
+.hz-empty h3 {
+  color: var(--hds-color-carbon-80, #2e2e32);
+  margin-block-end: 0.5rem;
 }
 
-.btn-hz-outline:hover,
-.btn-hz-outline:focus {
-  background: var(--color-primary);
-  color: #ffffff;
+
+/* ------------------------------------------------------------------ */
+/*  Pagination                                                          */
+/* ------------------------------------------------------------------ */
+
+.usa-pagination {
+  margin-block: 2.5rem;
+  display: flex;
+  justify-content: center;
 }
 
-.btn-hz-sm {
-  font-size: 0.75rem;
-  padding: 0.375rem 0.875rem;
+/* Disabled prev/next */
+.usa-pagination__link--disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
 }
 
-/* ============================================================
-   Form Elements
-   ============================================================ */
-.hz-form-label {
-  font-size: 0.6875rem;
-  color: var(--color-text-meta);
-  text-transform: uppercase;
-  letter-spacing: 0.0625rem;
-  font-family: var(--font-body);
-  font-weight: 600;
-  display: block;
-  margin-bottom: 0.3rem;
+
+/* ------------------------------------------------------------------ */
+/*  Detail Hero                                                         */
+/* ------------------------------------------------------------------ */
+
+.hz-detail-hero {
+  background-color: var(--hds-color-carbon-90, #17171b);
+  border-bottom: 3px solid var(--hds-color-nasa-blue, #1c67e3);
+  padding-block: 2.5rem;
 }
 
-.hz-form-control {
-  background: var(--color-bg);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
+.hz-detail-hero-inner {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.hz-detail-hero-img-col {
+  flex: 0 0 280px;
+}
+
+.hz-detail-hero-img {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  transition: background 0.15s, border-color 0.15s;
-  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--hds-color-carbon-70, #444447);
 }
 
-.hz-form-control:focus {
-  background: var(--color-surface);
-  border-color: var(--color-focus);
-  outline: 1px dotted var(--color-focus);
-  box-shadow: none;
+.hz-detail-hero-img--placeholder {
+  background-color: var(--hds-color-carbon-80, #2e2e32);
+  object-fit: none;
+  object-position: center;
+  padding: 1.5rem;
+  opacity: 0.4;
 }
 
-textarea.hz-form-control {
-  resize: vertical;
-  min-height: 6rem;
+.hz-detail-hero-content {
+  flex: 1;
+}
+
+.hz-detail-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: 0.75rem;
+}
+
+.hz-detail-hero-content h1 {
+  color: #fff;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  margin-block: 0 1rem;
+}
+
+.hz-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+@media (max-width: 700px) {
+  .hz-detail-hero-inner {
+    flex-direction: column;
+  }
+  .hz-detail-hero-img-col {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Detail Body — sidebar + main content layout                        */
+/* ------------------------------------------------------------------ */
+
+.hz-detail-body {
+  padding-block: 2rem;
+}
+
+.hz-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.hz-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hz-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (max-width: 820px) {
+  .hz-detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Panels / info cards                                                 */
+/* ------------------------------------------------------------------ */
+
+.hz-panel {
+  background: var(--hds-color-spacesuit-white, #fff);
+  border: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+}
+
+.hz-panel-accent {
+  border-inline-start: 3px solid var(--hds-color-nasa-blue, #1c67e3);
+}
+
+.hz-panel-header {
+  font-family: var(--hds-font-family-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hds-color-carbon-60, #58585b);
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+  background-color: var(--hds-color-carbon-05, #f6f6f6);
+}
+
+.hz-panel-body {
+  padding: 1rem;
+}
+
+/* Spec rows */
+.hz-spec-row {
+  margin-block-end: 0.875rem;
+  padding-block-end: 0.875rem;
+  border-bottom: 1px solid var(--hds-color-carbon-05, #f6f6f6);
+}
+
+.hz-spec-row:last-child {
+  margin-block-end: 0;
+  padding-block-end: 0;
+  border-bottom: none;
+}
+
+.hz-spec-label {
+  font-family: var(--hds-font-family-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hds-color-carbon-60, #58585b);
+  margin: 0 0 0.25rem;
+}
+
+.hz-spec-value {
+  font-size: 0.9rem;
+  color: var(--hds-color-carbon-90, #17171b);
+  margin: 0;
+}
+
+/* QR */
+.hz-qr-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Datasets and component tags                                         */
+/* ------------------------------------------------------------------ */
+
+.hz-dataset-item {
+  margin-block-end: 0.75rem;
+  padding-block-end: 0.75rem;
+  border-bottom: 1px solid var(--hds-color-carbon-05, #f6f6f6);
+}
+
+.hz-dataset-item:last-child {
+  border-bottom: none;
+  margin-block-end: 0;
+  padding-block-end: 0;
+}
+
+.hz-tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hz-tag-item {
+  flex: 0 0 auto;
+}
+
+.hz-link-item {
+  margin-block-end: 0.625rem;
+}
+
+.hz-link-item:last-child {
+  margin-block-end: 0;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Team section                                                        */
+/* ------------------------------------------------------------------ */
+
+.hz-divider {
+  border: 0;
+  border-top: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+  margin-block: 2rem;
+}
+
+.hz-team-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-block-start: 1rem;
+}
+
+.hz-team-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--hds-color-carbon-80, #2e2e32);
+  margin-block-end: 1rem;
+}
+
+.hz-team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.hz-team-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.hz-team-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--hds-color-carbon-10, #e3e3e3);
+}
+
+.hz-team-name {
+  font-family: var(--hds-font-family-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--hds-color-carbon-90, #17171b);
+  margin: 0;
+}
+
+.hz-back-link {
+  margin-block-start: 2rem;
+  padding-block-start: 1.5rem;
+  border-top: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+}
+
+@media (max-width: 640px) {
+  .hz-team-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Form sections (Add Tool page)                                       */
+/* ------------------------------------------------------------------ */
+
+.hz-form-container {
+  padding-block: 2rem 4rem;
+  max-width: 1100px;
 }
 
 .hz-form-section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  margin-bottom: 1.5rem;
+  background: var(--hds-color-spacesuit-white, #fff);
+  border: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+  margin-block-end: 1.5rem;
+  padding: 0;
+  min-width: 0;
 }
 
 .hz-form-section-header {
-  background: var(--color-dark);
-  color: #ffffff;
-  padding: 0.75rem 1.25rem;
-  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.1125em;
-  text-transform: uppercase;
+  background-color: var(--hds-color-carbon-05, #f6f6f6);
+  border-bottom: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+  padding: 0.875rem 1.25rem;
+  font-family: var(--hds-font-family-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--hds-color-carbon-80, #2e2e32);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
 }
 
 .hz-form-section-body {
   padding: 1.25rem;
 }
 
-/* MultiSelect widget */
+/* Form grid row */
+.hz-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+}
+
+.hz-form-col-full { flex: 0 0 100%; max-width: 100%; }
+.hz-form-col-8    { flex: 0 0 calc(66.66% - 0.625rem); max-width: calc(66.66% - 0.625rem); }
+.hz-form-col-6    { flex: 0 0 calc(50% - 0.625rem);     max-width: calc(50% - 0.625rem); }
+.hz-form-col-4    { flex: 0 0 calc(33.33% - 0.625rem); max-width: calc(33.33% - 0.625rem); }
+
+@media (max-width: 640px) {
+  .hz-form-col-8,
+  .hz-form-col-6,
+  .hz-form-col-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* Form actions row */
+.hz-form-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-block-start: 0.5rem;
+}
+
+/* Quick-create inline button */
+.hz-btn-quick-create {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--hds-color-nasa-blue, #1c67e3) !important;
+  text-decoration: none;
+  margin-inline-start: 0.5rem;
+  padding: 2px 6px;
+  border: 1px solid var(--hds-color-nasa-blue, #1c67e3);
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.hz-btn-quick-create:hover {
+  background-color: var(--hds-color-nasa-blue, #1c67e3);
+  color: #fff !important;
+}
+
+/* Image preview */
+.hz-img-preview {
+  margin-block-start: 0.75rem;
+}
+
+.hz-img-preview-img {
+  max-height: 180px;
+  border: 1px solid var(--hds-color-carbon-20, #d1d1d1);
+  object-fit: contain;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Modal (Bootstrap modal + HDS styling)                               */
+/* ------------------------------------------------------------------ */
+
+.hz-modal-content {
+  border: none;
+  border-radius: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.hz-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background-color: var(--hds-color-carbon-80, #2e2e32);
+  border-bottom: 2px solid var(--hds-color-nasa-blue, #1c67e3);
+}
+
+.hz-modal-title {
+  color: #fff;
+  font-family: var(--hds-font-family-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.hz-modal-close {
+  opacity: 0.7;
+  padding: 0;
+}
+
+.hz-modal-close:hover {
+  opacity: 1;
+}
+
+.hz-modal-body {
+  padding: 1.25rem;
+  background: var(--hds-color-spacesuit-white, #fff);
+}
+
+.hz-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+  background: var(--hds-color-spacesuit-white, #fff);
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  USWDS form overrides (within our app context)                       */
+/* ------------------------------------------------------------------ */
+
+/* Remove USWDS max-width restriction on form inputs in our forms */
+.hz-form-section .usa-input,
+.hz-form-section .usa-select,
+.hz-form-section .usa-textarea,
+.hz-modal-body .usa-input,
+.hz-modal-body .usa-select,
+.hz-modal-body .usa-textarea {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* USWDS form-group spacing */
+.hz-form-section .usa-form-group,
+.hz-modal-body .usa-form-group {
+  margin-block-end: 0;
+  padding-block-end: 0.5rem;
+}
+
+/* Ensure textarea has proper height */
+.hz-form-section .usa-textarea {
+  min-height: 5rem;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  MultiSelect widget (custom) — HDS token updates                    */
+/*  Class names updated to match main.js .hz-multiselect-* rendering   */
+/* ------------------------------------------------------------------ */
+
 .hz-multiselect {
   position: relative;
+  font-family: var(--hds-font-family-body);
+  font-size: 0.9rem;
 }
 
 .hz-multiselect-display {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  min-height: 2.375rem;
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
   align-items: center;
-  font-family: var(--font-body);
-  font-size: 0.875rem;
+  gap: 0.3rem;
+  padding: 0.4rem 0.6rem;
+  background: #fff;
+  border: 1px solid var(--hds-color-carbon-60, #58585b);
+  min-height: 2.5rem;
+  cursor: pointer;
 }
 
-.hz-multiselect-display:focus,
-.hz-multiselect-display[aria-expanded="true"] {
-  background: var(--color-surface);
-  border-color: var(--color-focus);
-  outline: 1px dotted var(--color-focus);
+.hz-multiselect-display:hover {
+  border-color: var(--hds-color-nasa-blue, #1c67e3);
+}
+
+/* WCAG 2.4.7 Focus Visible — explicit focus ring for keyboard users */
+.hz-multiselect-display:focus-visible {
+  outline: 2px dashed var(--hds-color-carbon-70, #444447);
+  outline-offset: 2px;
 }
 
 .hz-multiselect-tag {
+  background-color: var(--hds-color-nasa-blue, #1c67e3);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 2px;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(1, 112, 185, 0.1);
-  border: 1px solid rgba(1, 112, 185, 0.35);
-  border-radius: 2px;
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 1px 6px;
 }
 
 .hz-multiselect-tag-remove {
-  background: none;
-  border: none;
-  color: var(--color-primary);
   cursor: pointer;
-  padding: 0;
+  opacity: 0.8;
   line-height: 1;
-  font-size: 0.875rem;
 }
 
-.hz-multiselect-tag-remove:hover {
-  color: var(--color-hover);
+.hz-multiselect-tag-remove:hover { opacity: 1; }
+
+.ms-placeholder {
+  color: var(--hds-color-carbon-50, #77777a);
+  font-size: 0.9rem;
 }
 
 .hz-multiselect-dropdown {
   position: absolute;
-  top: calc(100% + 4px);
+  top: 100%;
   left: 0;
   right: 0;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-menu);
-  z-index: 500;
+  z-index: 200;
+  background: #fff;
+  border: 1px solid var(--hds-color-carbon-60, #58585b);
+  border-top: none;
   max-height: 220px;
   overflow-y: auto;
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.12);
   display: none;
 }
 
@@ -602,351 +1085,120 @@ textarea.hz-form-control {
   display: block;
 }
 
-.hz-multiselect-search {
-  padding: 0.5rem;
-  border-bottom: 1px solid var(--color-border);
-}
-
 .hz-multiselect-search input {
+  border: none;
+  border-bottom: 1px solid var(--hds-color-carbon-10, #e3e3e3);
+  padding: 0.5rem 0.75rem;
   width: 100%;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 0.375rem 0.625rem;
-  font-size: 0.8125rem;
-  font-family: var(--font-body);
-  background: var(--color-bg);
-}
-
-.hz-multiselect-search input:focus {
-  border-color: var(--color-focus);
-  outline: 1px dotted var(--color-focus);
-  box-shadow: none;
-  background: var(--color-surface);
+  font-size: 0.875rem;
+  font-family: inherit;
 }
 
 .hz-multiselect-option {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  font-family: var(--font-body);
+  padding: 0.4rem 0.75rem;
   cursor: pointer;
-  color: var(--color-text);
-  transition: background 0.1s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  font-size: 0.875rem;
 }
 
-.hz-multiselect-option:hover,
+.hz-multiselect-option:hover {
+  background-color: var(--hds-color-carbon-05, #f6f6f6);
+}
+
 .hz-multiselect-option.selected {
-  background: rgba(1, 112, 185, 0.07);
-  color: var(--color-primary);
-}
-
-/* ============================================================
-   Cards / Panels
-   ============================================================ */
-.hz-panel {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
-}
-
-.hz-panel-accent {
-  border-left: 4px solid var(--color-primary);
-}
-
-.hz-panel-header {
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
+  color: var(--hds-color-nasa-blue, #1c67e3);
   font-weight: 600;
-  letter-spacing: 0.1125em;
-  text-transform: uppercase;
-  color: #ffffff;
-  background: var(--color-dark);
-  padding: 0.625rem 1rem;
-  margin: -1.25rem -1.25rem 1rem;
-  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
 }
 
-/* ============================================================
-   Detail Page
-   ============================================================ */
-.hz-detail-hero {
-  background: var(--color-dark);
-  padding: 2rem 0;
-  border-bottom: 3px solid var(--color-primary);
-  color: #ffffff;
+.hz-multiselect-option.selected::before {
+  content: "\2713\0020";
 }
 
-.hz-detail-hero h1 {
-  color: #ffffff;
-  font-size: 1.875rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+
+/* ------------------------------------------------------------------ */
+/*  USWDS component fixes / normalizations                             */
+/* ------------------------------------------------------------------ */
+
+/* Ensure usa-button--secondary uses HDS blue not default */
+.usa-button--secondary {
+  background-color: var(--hds-color-nasa-blue, #1c67e3);
+  border-color: var(--hds-color-nasa-blue, #1c67e3);
+  color: #fff;
 }
 
-.hz-detail-hero-img {
-  width: 100%;
-  max-height: 260px;
-  object-fit: cover;
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+.usa-button--secondary:hover {
+  background-color: var(--hds-color-nasa-blue-shade, #0b3d91);
+  border-color: var(--hds-color-nasa-blue-shade, #0b3d91);
 }
 
-.hz-spec-label {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.075em;
-  color: var(--color-text-meta);
-  margin-bottom: 0.2rem;
-  font-family: var(--font-body);
+/* Ensure links in content areas use HDS blue */
+.hz-detail-main a.usa-link,
+.hz-panel-body a.usa-link {
+  color: var(--hds-color-nasa-blue, #1c67e3);
 }
 
-.hz-spec-value {
-  font-size: 0.9rem;
-  color: var(--color-text);
-  margin-bottom: 0.875rem;
-}
 
-.hz-team-card {
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
-  padding: 0.75rem;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-}
+/* ------------------------------------------------------------------ */
+/*  Accessibility                                                       */
+/* ------------------------------------------------------------------ */
 
-.hz-team-avatar {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 50%;
-  background: var(--color-border);
-  flex-shrink: 0;
-}
-
-.hz-team-name {
-  font-family: var(--font-heading);
+.usa-skipnav {
+  background: var(--hds-color-nasa-blue, #1c67e3);
+  color: #fff;
+  font-family: var(--hds-font-family-heading);
   font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--color-text);
-  margin-bottom: 0.1rem;
-}
-
-.hz-team-org {
-  font-size: 0.8rem;
-  color: var(--color-text-meta);
-}
-
-/* ============================================================
-   Pagination
-   ============================================================ */
-.hz-pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 1.5rem 0;
-  flex-wrap: wrap;
-}
-
-.hz-page-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.25rem;
-  height: 2.25rem;
-  padding: 0 0.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  color: var(--color-primary);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.12s, color 0.12s, border-color 0.12s;
-}
-
-.hz-page-link:hover,
-.hz-page-link:focus {
-  background: var(--color-primary);
-  color: #ffffff;
-  border-color: var(--color-primary);
-  text-decoration: none;
-}
-
-.hz-page-link.active {
-  background: var(--color-primary);
-  color: #ffffff;
-  border-color: var(--color-primary);
-}
-
-.hz-page-link.disabled {
-  color: var(--color-text-meta);
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-/* ============================================================
-   Modals (Horizon style)
-   ============================================================ */
-.hz-modal .modal-header {
-  background: var(--color-dark);
-  color: #ffffff;
-  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
-  border-bottom: none;
-}
-
-.hz-modal .modal-title {
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.1125em;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-
-.hz-modal .modal-content {
-  border-radius: var(--radius);
-  border: 1px solid var(--color-border);
-}
-
-.hz-modal .modal-footer {
-  border-top: 1px solid var(--color-border);
-  background: var(--color-surface);
-}
-
-/* ============================================================
-   Alert / Messages
-   ============================================================ */
-.hz-alert {
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--color-border);
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-}
-
-.hz-alert-info {
-  background: rgba(1, 112, 185, 0.08);
-  border-color: rgba(1, 112, 185, 0.3);
-  color: #015a97;
-}
-
-/* ============================================================
-   Footer
-   ============================================================ */
-.hz-footer {
-  background: var(--color-dark);
-  color: rgba(255, 255, 255, 0.6);
-  padding: 2rem 0;
-  margin-top: 3rem;
-  font-size: 0.8125rem;
-  font-family: var(--font-body);
-}
-
-.hz-footer a {
-  color: rgba(255, 255, 255, 0.75);
-  text-decoration: none;
-}
-
-.hz-footer a:hover {
-  color: #ffffff;
-}
-
-/* ============================================================
-   Results count / meta
-   ============================================================ */
-.hz-results-meta {
-  font-size: 0.8125rem;
-  color: var(--color-text-meta);
-  padding: 0.5rem 0 0;
-  font-family: var(--font-body);
-}
-
-/* ============================================================
-   Empty state
-   ============================================================ */
-.hz-empty {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: var(--color-text-meta);
-}
-
-.hz-empty-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.4;
-}
-
-.hz-empty h3 {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: var(--color-text-meta);
-}
-
-/* ============================================================
-   Skip Navigation Link (WCAG / Section 508)
-   ============================================================ */
-.hz-skip-link {
+  padding: 0.5rem 1rem;
   position: absolute;
-  top: -100%;
-  left: 0;
-  background: var(--color-dark);
-  color: #ffffff;
-  padding: 0.75rem 1.25rem;
+  transform: translateY(-100%);
+  transition: transform 0.15s;
   z-index: 9999;
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 0.875rem;
-  text-decoration: none;
-  border-bottom-right-radius: var(--radius);
 }
 
-.hz-skip-link:focus {
+.usa-skipnav:focus {
+  transform: translateY(0);
+  position: fixed;
   top: 0;
-  outline: 2px dotted #ffffff;
-  outline-offset: 2px;
+  left: 0;
 }
 
-/* ============================================================
-   Utility
-   ============================================================ */
-.hz-divider {
-  border: none;
-  border-top: 1px solid var(--color-border);
-  margin: 1.25rem 0;
+
+/* ------------------------------------------------------------------ */
+/*  USWDS nav: mobile overlay                                           */
+/* ------------------------------------------------------------------ */
+
+.usa-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 399;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
 }
 
-.text-meta {
-  color: var(--color-text-meta);
-  font-size: 0.875rem;
+.usa-overlay.is-visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+/* Mobile nav panel */
+@media (max-width: 64em) {
+  .usa-nav {
+    background-color: var(--hds-color-carbon-80, #2e2e32);
+    padding: 1rem;
+  }
 
-/* ============================================================
-   Responsive Tweaks
-   ============================================================ */
-@media (max-width: 575.98px) {
-  .hz-hero h1 { font-size: 1.5rem; }
-  .hz-detail-hero h1 { font-size: 1.375rem; }
-  .hz-filter-bar .row > * { margin-bottom: 0.5rem; }
+  .usa-nav__primary a {
+    color: #fff;
+  }
+
+  .hz-nav-auth {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-block-start: 1rem;
+    padding-block-start: 1rem;
+    border-top: 1px solid var(--hds-color-carbon-70, #444447);
+  }
 }
