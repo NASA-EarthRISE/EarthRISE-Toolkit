@@ -23,7 +23,26 @@
       "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" manage.py check)",
       "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\\\\manage.py\" makemigrations tools)",
       "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" -m pip show python-decouple)",
-      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" -m pip install python-decouple)"
+      "Bash(\"C:\\\\ProgramData\\\\anaconda3\\\\envs\\\\earthrise-toolkit\\\\python.exe\" -m pip install python-decouple)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(powershell -Command \"Invoke-WebRequest -Uri ''https://github.com/nasa/hds-core/releases/download/v0.8.0/hds-core-v0.8.0-dist.zip'' -OutFile ''hds-core-v0.8.0-dist.zip'' -UseBasicParsing\")",
+      "Bash(powershell -Command \"Expand-Archive -Path ''hds-core-v0.8.0-dist.zip'' -DestinationPath ''hds-dist-extracted'' -Force\")",
+      "Bash(powershell -Command:*)",
+      "Bash(dir \"C:\\\\Users\\\\washmall\\\\Documents\\\\websites\\\\EarthRISE_Toolkit\" /s /b)",
+      "Bash(pa11y:*)",
+      "Bash(npx pa11y:*)",
+      "Bash(curl:*)",
+      "Bash(python -c:*)",
+      "Bash(python manage.py shell:*)",
+      "Bash(echo:*)",
+      "Bash(cat:*)",
+      "Bash(npx puppeteer:*)",
+      "Bash(CHROME=\"C:/Users/washmall/.cache/puppeteer/chrome/win64-150.0.7871.24/chrome-win64/chrome.exe\")",
+      "Bash(node:*)",
+      "Bash(ls:*)"
     ]
   }
 }

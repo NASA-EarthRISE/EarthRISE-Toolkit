@@ -7,47 +7,42 @@
 {% block content %}
 
 <!-- ============================================================
-     Detail Hero
+     Detail Hero — dark palette banner
      ============================================================ -->
-<section class="hz-detail-hero" aria-labelledby="detail-heading">
+<section class="hz-detail-hero" data-hds-palette="dark" aria-labelledby="detail-heading">
   <div class="hz-container">
-    <div class="row g-4 align-items-start">
+    <div class="hz-detail-hero-inner">
 
       <!-- Left: image -->
-      <div class="col-md-4 col-lg-3">
+      <div class="hz-detail-hero-img-col">
         {% if app.hero %}
         <img src="{{ app.hero.url }}"
              alt="{{ app.name }} hero image"
              class="hz-detail-hero-img">
         {% else %}
-        <div class="hz-detail-hero-img d-flex align-items-center justify-content-center"
-             style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:var(--radius);"
-             role="img" aria-label="No image available for {{ app.name }}">
-          <i class="bi bi-image text-white-50" style="font-size:3rem;" aria-hidden="true"></i>
-        </div>
+        <img src="{% static 'tools/hds/assets/img/circle-gray-20.svg' %}"
+             alt="No image available for {{ app.name }}"
+             class="hz-detail-hero-img hz-detail-hero-img--placeholder">
         {% endif %}
       </div>
 
       <!-- Right: title and meta -->
-      <div class="col-md-8 col-lg-9">
-        <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
-          <!-- Visibility status -->
+      <div class="hz-detail-hero-content">
+        <!-- Status badges -->
+        <div class="hz-detail-badges">
           {% if app.shown %}
-          <span class="hz-badge hz-badge-status-shown"
-                aria-label="Status: publicly visible">
-            <i class="bi bi-eye" aria-hidden="true"></i> Published
+          <span class="usa-tag hz-tag-published" aria-label="Status: publicly visible">
+            <i class="bi bi-eye me-1" aria-hidden="true"></i>Published
           </span>
           {% else %}
-          <span class="hz-badge hz-badge-status-pending"
-                aria-label="Status: pending review, not publicly visible">
-            <i class="bi bi-eye-slash" aria-hidden="true"></i> Pending Review
+          <span class="usa-tag hz-tag-pending" aria-label="Status: pending review">
+            <i class="bi bi-eye-slash me-1" aria-hidden="true"></i>Pending Review
           </span>
           {% endif %}
 
           {% if app.incomplete_info %}
-          <span class="hz-badge" style="border-color:#dc3545;color:#dc3545;background:rgba(220,53,69,0.07);"
-                aria-label="Information incomplete">
-            <i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Incomplete Info
+          <span class="usa-tag hz-tag-warning" aria-label="Information incomplete">
+            <i class="bi bi-exclamation-triangle me-1" aria-hidden="true"></i>Incomplete Info
           </span>
           {% endif %}
         </div>
@@ -55,11 +50,11 @@
         <h1 id="detail-heading">{{ app.name }}</h1>
 
         <!-- Action buttons -->
-        <div class="d-flex flex-wrap gap-2 mt-3">
+        <div class="hz-detail-actions">
           {% if app.url %}
           <a href="{{ app.url }}"
              target="_blank" rel="noopener noreferrer"
-             class="btn-hz btn-hz-primary"
+             class="usa-button"
              aria-label="Open {{ app.name }} application (opens in new tab)">
             <i class="bi bi-box-arrow-up-right me-1" aria-hidden="true"></i> Open Tool
           </a>
@@ -67,8 +62,7 @@
           {% if app.code_repo_url %}
           <a href="{{ app.code_repo_url }}"
              target="_blank" rel="noopener noreferrer"
-             class="btn-hz btn-hz-outline"
-             style="background:transparent;border-color:rgba(255,255,255,0.4);color:rgba(255,255,255,0.85);"
+             class="usa-button usa-button--outline usa-button--inverse"
              aria-label="View code repository (opens in new tab)">
             <i class="bi bi-github me-1" aria-hidden="true"></i> Repository
           </a>
@@ -76,15 +70,13 @@
           {% if app.design_documentation_url %}
           <a href="{{ app.design_documentation_url }}"
              target="_blank" rel="noopener noreferrer"
-             class="btn-hz btn-hz-outline"
-             style="background:transparent;border-color:rgba(255,255,255,0.4);color:rgba(255,255,255,0.85);"
+             class="usa-button usa-button--outline usa-button--inverse"
              aria-label="View design documentation (opens in new tab)">
             <i class="bi bi-file-earmark-text me-1" aria-hidden="true"></i> Design Docs
           </a>
           {% endif %}
           <a href="{% url 'admin:tools_application_change' app.pk %}"
-             class="btn-hz btn-hz-sm"
-             style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85);"
+             class="usa-button usa-button--outline usa-button--inverse"
              aria-label="Edit this tool in the admin">
             <i class="bi bi-pencil me-1" aria-hidden="true"></i> Edit
           </a>
@@ -98,22 +90,22 @@
 <!-- ============================================================
      Main Detail Content
      ============================================================ -->
-<div class="hz-container mt-4 pb-5">
-  <div class="row g-4">
+<div class="hz-container hz-detail-body">
+  <div class="hz-detail-layout">
 
     <!-- --------------------------------------------------------
          Sidebar (1/3)
          -------------------------------------------------------- -->
-    <aside class="col-lg-4" aria-label="Tool specifications">
+    <aside class="hz-detail-sidebar" aria-label="Tool specifications">
 
       <!-- QR Code -->
       {% if app.url %}
-      <div class="hz-panel hz-panel-accent mb-4" id="qr-panel">
+      <div class="hz-panel hz-panel-accent" id="qr-panel">
         <div class="hz-panel-header">QR Code</div>
-        <div class="text-center py-3">
-          <div id="qrcode" aria-label="QR code for {{ app.url }}" role="img"></div>
-          <p class="text-meta mt-2 mb-0" style="font-size:0.75rem;word-break:break-all;">
-            <a href="{{ app.url }}" target="_blank" rel="noopener noreferrer"
+        <div class="hz-panel-body hz-qr-body">
+          <div id="qrcode"></div>
+          <p class="hds-caption" style="word-break:break-all;">
+            <a class="usa-link" href="{{ app.url }}" target="_blank" rel="noopener noreferrer"
                aria-label="Tool URL: {{ app.url }}">{{ app.url }}</a>
           </p>
         </div>
@@ -123,93 +115,97 @@
       <!-- Specifications panel -->
       <div class="hz-panel">
         <div class="hz-panel-header">Specifications</div>
+        <div class="hz-panel-body">
 
-        {% if app.organization %}
-        <div class="mb-3">
-          <p class="hz-spec-label">Organization</p>
-          <p class="hz-spec-value">
-            {% if app.organization.url %}
-            <a href="{{ app.organization.url }}" target="_blank" rel="noopener noreferrer">
+          {% if app.organization %}
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Organization</p>
+            <p class="hz-spec-value">
+              {% if app.organization.url %}
+              <a class="usa-link" href="{{ app.organization.url }}" target="_blank" rel="noopener noreferrer">
+                {{ app.organization.name }}
+              </a>
+              {% else %}
               {{ app.organization.name }}
-            </a>
-            {% else %}
-            {{ app.organization.name }}
-            {% endif %}
-          </p>
-        </div>
-        {% endif %}
+              {% endif %}
+            </p>
+          </div>
+          {% endif %}
 
-        {% if app.deployment_environment.exists %}
-        <div class="mb-3">
-          <p class="hz-spec-label">Deployment Environment</p>
-          <ul class="list-unstyled mb-0">
-            {% for env in app.deployment_environment.all %}
-            <li class="hz-spec-value mb-1">
-              <i class="bi bi-server me-1 text-meta" aria-hidden="true"></i>{{ env.name }}
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endif %}
+          {% if app.deployment_environment.exists %}
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Deployment Environment</p>
+            <ul class="usa-list usa-list--unstyled">
+              {% for env in app.deployment_environment.all %}
+              <li class="hz-spec-value">
+                <i class="bi bi-server me-1" aria-hidden="true"></i>{{ env.name }}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
 
-        {% if app.date_released %}
-        <div class="mb-3">
-          <p class="hz-spec-label">Date Released</p>
-          <p class="hz-spec-value">{{ app.date_released|date:"F j, Y" }}</p>
-        </div>
-        {% endif %}
+          {% if app.date_released %}
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Date Released</p>
+            <p class="hz-spec-value">{{ app.date_released|date:"F j, Y" }}</p>
+          </div>
+          {% endif %}
 
-        {% if app.date_decommissioned %}
-        <div class="mb-3">
-          <p class="hz-spec-label">Date Decommissioned</p>
-          <p class="hz-spec-value">{{ app.date_decommissioned|date:"F j, Y" }}</p>
-        </div>
-        {% endif %}
+          {% if app.date_decommissioned %}
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Date Decommissioned</p>
+            <p class="hz-spec-value">{{ app.date_decommissioned|date:"F j, Y" }}</p>
+          </div>
+          {% endif %}
 
-        <div class="mb-3">
-          <p class="hz-spec-label">Display Priority</p>
-          <p class="hz-spec-value">{{ app.display_priority }}</p>
-        </div>
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Display Priority</p>
+            <p class="hz-spec-value">{{ app.display_priority }}</p>
+          </div>
 
-        <div class="mb-3">
-          <p class="hz-spec-label">Record Updated</p>
-          <p class="hz-spec-value">{{ app.date_modified|date:"F j, Y" }}</p>
-        </div>
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Record Updated</p>
+            <p class="hz-spec-value">{{ app.date_modified|date:"F j, Y" }}</p>
+          </div>
 
-        {% if app.ast_pi %}
-        <div class="mb-3">
-          <p class="hz-spec-label">AST Principal Investigator</p>
-          <p class="hz-spec-value">{{ app.ast_pi.name }}</p>
-        </div>
-        {% endif %}
+          {% if app.ast_pi %}
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">AST Principal Investigator</p>
+            <p class="hz-spec-value">{{ app.ast_pi.name }}</p>
+          </div>
+          {% endif %}
 
-        {% if app.ast_round %}
-        <div class="mb-3">
-          <p class="hz-spec-label">AST Round</p>
-          <p class="hz-spec-value">Round {{ app.ast_round }}</p>
-        </div>
-        {% endif %}
+          {% if app.ast_round %}
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">AST Round</p>
+            <p class="hz-spec-value">Round {{ app.ast_round }}</p>
+          </div>
+          {% endif %}
 
-        <div class="mb-0">
-          <p class="hz-spec-label">Total Likes</p>
-          <p class="hz-spec-value">
-            <i class="bi bi-heart me-1" aria-hidden="true"></i>{{ app.like_count }}
-          </p>
-        </div>
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Total Likes</p>
+            <p class="hz-spec-value">
+              <i class="bi bi-heart me-1" aria-hidden="true"></i>{{ app.like_count }}
+            </p>
+          </div>
 
+        </div>
       </div><!-- /.hz-panel -->
     </aside>
 
     <!-- --------------------------------------------------------
          Main Content (2/3)
          -------------------------------------------------------- -->
-    <div class="col-lg-8">
+    <div class="hz-detail-main">
 
       <!-- Description -->
       {% if app.description %}
       <div class="hz-panel hz-panel-accent">
         <div class="hz-panel-header">Description</div>
-        <p>{{ app.description }}</p>
+        <div class="hz-panel-body">
+          <p>{{ app.description }}</p>
+        </div>
       </div>
       {% endif %}
 
@@ -217,20 +213,20 @@
       {% if app.platform_description or app.deployment_env_further_details %}
       <div class="hz-panel">
         <div class="hz-panel-header">Technical Details</div>
-
-        {% if app.platform_description %}
-        <div class="mb-3">
-          <p class="hz-spec-label">Platform</p>
-          <p>{{ app.platform_description }}</p>
+        <div class="hz-panel-body">
+          {% if app.platform_description %}
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Platform</p>
+            <p>{{ app.platform_description }}</p>
+          </div>
+          {% endif %}
+          {% if app.deployment_env_further_details %}
+          <div class="hz-spec-row">
+            <p class="hz-spec-label">Deployment Notes</p>
+            <p>{{ app.deployment_env_further_details }}</p>
+          </div>
+          {% endif %}
         </div>
-        {% endif %}
-
-        {% if app.deployment_env_further_details %}
-        <div class="mb-0">
-          <p class="hz-spec-label">Deployment Notes</p>
-          <p>{{ app.deployment_env_further_details }}</p>
-        </div>
-        {% endif %}
       </div>
       {% endif %}
 
@@ -238,24 +234,26 @@
       {% if app.datasets.exists %}
       <div class="hz-panel">
         <div class="hz-panel-header">Datasets</div>
-        <ul class="list-unstyled mb-0">
-          {% for ds in app.datasets.all %}
-          <li class="mb-3">
-            <p class="hz-spec-label mb-0">
-              {% if ds.url %}
-              <a href="{{ ds.url }}" target="_blank" rel="noopener noreferrer">
+        <div class="hz-panel-body">
+          <ul class="usa-list usa-list--unstyled">
+            {% for ds in app.datasets.all %}
+            <li class="hz-dataset-item">
+              <p class="hz-spec-label">
+                {% if ds.url %}
+                <a class="usa-link" href="{{ ds.url }}" target="_blank" rel="noopener noreferrer">
+                  {{ ds.name }}
+                </a>
+                {% else %}
                 {{ ds.name }}
-              </a>
-              {% else %}
-              {{ ds.name }}
+                {% endif %}
+              </p>
+              {% if ds.description %}
+              <p class="hds-caption">{{ ds.description }}</p>
               {% endif %}
-            </p>
-            {% if ds.description %}
-            <p class="text-meta mb-0" style="font-size:0.875rem;">{{ ds.description }}</p>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
       {% endif %}
 
@@ -263,15 +261,17 @@
       {% if app.application_components.exists %}
       <div class="hz-panel">
         <div class="hz-panel-header">Application Components</div>
-        <div class="d-flex flex-wrap gap-2">
-          {% for comp in app.application_components.all %}
-          <div>
-            <span class="hz-badge">{{ comp.name }}</span>
-            {% if comp.description %}
-            <p class="text-meta mb-0 mt-1" style="font-size:0.75rem;">{{ comp.description }}</p>
-            {% endif %}
+        <div class="hz-panel-body">
+          <div class="hz-tag-group">
+            {% for comp in app.application_components.all %}
+            <div class="hz-tag-item">
+              <span class="usa-tag">{{ comp.name }}</span>
+              {% if comp.description %}
+              <p class="hds-caption">{{ comp.description }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
           </div>
-          {% endfor %}
         </div>
       </div>
       {% endif %}
@@ -280,92 +280,87 @@
       {% if links %}
       <div class="hz-panel">
         <div class="hz-panel-header">Links &amp; Resources</div>
-        <ul class="list-unstyled mb-0">
-          {% for link in links %}
-          <li class="mb-3">
-            <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer"
-               aria-label="{{ link.description }} (opens in new tab)">
-              <i class="bi bi-link-45deg me-1" aria-hidden="true"></i>
-              {{ link.description|default:link.url }}
-            </a>
-            {% if link.additional_description %}
-            <p class="text-meta mb-0" style="font-size:0.875rem;">{{ link.additional_description }}</p>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
+        <div class="hz-panel-body">
+          <ul class="usa-list usa-list--unstyled">
+            {% for link in links %}
+            <li class="hz-link-item">
+              <a class="usa-link usa-link--external" href="{{ link.url }}"
+                 target="_blank" rel="noopener noreferrer"
+                 aria-label="{{ link.description }} (opens in new tab)">
+                {{ link.description|default:link.url }}
+              </a>
+              {% if link.additional_description %}
+              <p class="hds-caption">{{ link.additional_description }}</p>
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
       {% endif %}
 
-    </div><!-- /.col-lg-8 -->
-  </div><!-- /.row -->
+    </div><!-- /.hz-detail-main -->
+  </div><!-- /.hz-detail-layout -->
 
   <!-- ============================================================
        Team Section (full width)
        ============================================================ -->
   {% if scientists or developers %}
-  <hr class="hz-divider mt-2">
-  <div class="row g-4 mt-1">
+  <hr class="hz-divider">
+  <div class="hz-team-section">
 
     <!-- Research / Science Team -->
     {% if scientists %}
-    <section class="col-md-6" aria-labelledby="team-scientists">
-      <h2 id="team-scientists" class="h5 mb-3">
-        <i class="bi bi-mortarboard me-2" aria-hidden="true" style="color:var(--color-primary);"></i>
-        Research Team
+    <section class="hz-team-col" aria-labelledby="team-scientists">
+      <h2 id="team-scientists" class="hz-team-heading">
+        <i class="bi bi-mortarboard me-2" aria-hidden="true"></i>Research Team
       </h2>
-      <div class="row g-2">
+      <ul class="usa-list usa-list--unstyled hz-team-list">
         {% for sci in scientists %}
-        <div class="col-12">
-          <div class="hz-team-card">
-            <img src="{{ sci.image_url }}"
-                 alt="{{ sci.name }} profile photo"
-                 class="hz-team-avatar"
-                 loading="lazy">
-            <div>
-              <p class="hz-team-name mb-0">{{ sci.name }}</p>
-              <p class="hz-team-org">{{ sci.organization.name }}</p>
-            </div>
+        <li class="hz-team-card">
+          <img src="{{ sci.image_url }}"
+               alt="{{ sci.name }} profile photo"
+               class="hz-team-avatar"
+               loading="lazy">
+          <div>
+            <p class="hz-team-name">{{ sci.name }}</p>
+            <p class="hds-caption">{{ sci.organization.name }}</p>
           </div>
-        </div>
+        </li>
         {% endfor %}
-      </div>
+      </ul>
     </section>
     {% endif %}
 
     <!-- Engineering / Development Team -->
     {% if developers %}
-    <section class="col-md-6" aria-labelledby="team-developers">
-      <h2 id="team-developers" class="h5 mb-3">
-        <i class="bi bi-code-slash me-2" aria-hidden="true" style="color:var(--color-primary);"></i>
-        Engineering Team
+    <section class="hz-team-col" aria-labelledby="team-developers">
+      <h2 id="team-developers" class="hz-team-heading">
+        <i class="bi bi-code-slash me-2" aria-hidden="true"></i>Engineering Team
       </h2>
-      <div class="row g-2">
+      <ul class="usa-list usa-list--unstyled hz-team-list">
         {% for dev in developers %}
-        <div class="col-12">
-          <div class="hz-team-card">
-            <img src="{{ dev.image_url }}"
-                 alt="{{ dev.name }} profile photo"
-                 class="hz-team-avatar"
-                 loading="lazy">
-            <div>
-              <p class="hz-team-name mb-0">{{ dev.name }}</p>
-              <p class="hz-team-org">{{ dev.organization.name }}</p>
-            </div>
+        <li class="hz-team-card">
+          <img src="{{ dev.image_url }}"
+               alt="{{ dev.name }} profile photo"
+               class="hz-team-avatar"
+               loading="lazy">
+          <div>
+            <p class="hz-team-name">{{ dev.name }}</p>
+            <p class="hds-caption">{{ dev.organization.name }}</p>
           </div>
-        </div>
+        </li>
         {% endfor %}
-      </div>
+      </ul>
     </section>
     {% endif %}
 
-  </div><!-- /.row team -->
+  </div><!-- /.hz-team-section -->
   {% endif %}
 
   <!-- Back link -->
-  <div class="mt-4">
-    <a href="{% url 'home' %}" class="btn-hz btn-hz-sm"
-       style="background:var(--color-text-meta);"
+  <div class="hz-back-link">
+    <a href="{% url 'home' %}" class="usa-button usa-button--outline"
        aria-label="Return to tool catalog">
       <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> Back to Catalog
     </a>
@@ -377,11 +372,8 @@
 
 {% block extra_scripts %}
 {% if app.url %}
-<!-- QR Code generation -->
 <script>
   $(document).ready(function () {
-    // Simple inline QR code using a public API; no library dependency in prod
-    // For a self-hosted approach, drop qrcode.min.js into static/tools/js/
     var url = $('#qr-panel').find('a').first().attr('href') || '';
     var apiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(url);
     var img = $('<img>').attr({
@@ -390,7 +382,7 @@
       width: 150,
       height: 150,
       loading: 'lazy'
-    }).css({'border-radius': 'var(--radius)', 'border': '1px solid var(--color-border)'});
+    }).css({'border': '1px solid var(--hds-palette-border)'});
     $('#qrcode').append(img);
   });
 </script>
