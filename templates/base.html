@@ -53,11 +53,15 @@
 
             .usa-footer__primary-link {
                 padding: 1rem;
-                color: #000!important;
+                color: #000 !important;
                 font-weight: 700;
                 border: 0;
                 border-top: 1px solid #e6e6e6;
                 display: block;
+            }
+
+            .usa-accordion__button:after {
+                margin-left: 9.75rem;
             }
         </style>
 
@@ -70,6 +74,66 @@
 
 <!-- USWDS mobile nav overlay (required by uswds.js) -->
 <div class="usa-overlay"></div>
+<section class="usa-banner" aria-label="Official website of the United States government">
+    <div class="usa-accordion">
+        <header class="usa-banner__header">
+            <div class="usa-banner__inner">
+                <div class="grid-col-auto">
+                    <img aria-hidden="true" class="usa-banner__header-flag" src="{% static 'img/us_flag_small.png' %}"
+                         alt="U.S. flag">
+                </div>
+                <div class="grid-col-fill tablet:grid-col-auto" aria-hidden="true">
+                    <p class="usa-banner__header-text" style="margin-block-end: 0!important;">
+                        An official website of the United States government
+                    </p>
+                    <p class="usa-banner__header-action">Here's how you know</p>
+                </div>
+                <button type="button" class="usa-accordion__button usa-banner__button" aria-expanded="false"
+                        aria-controls="gov-banner-default-landing" style="border: 0;">
+                    <span class="usa-banner__button-text">Here's how you know</span>
+                </button>
+            </div>
+        </header>
+        <div class="usa-banner__content usa-accordion__content" id="gov-banner-default-landing" hidden="">
+            <div class="grid-row grid-gap-lg">
+                <div class="usa-banner__guidance tablet:grid-col-6">
+                    <img class="usa-banner__icon usa-media-block__img" src="{% static 'img/icon-dot-gov.svg' %}"
+                         role="img" alt="" aria-hidden="true">
+                    <div class="usa-media-block__body">
+                        <p>
+                            <strong>Official websites use .gov</strong><br>A
+                            <strong>.gov</strong> website belongs to an official government
+                            organization in the United States.
+                        </p>
+                    </div>
+                </div>
+                <div class="usa-banner__guidance tablet:grid-col-6">
+                    <img class="usa-banner__icon usa-media-block__img" src="{% static 'img/icon-https.svg' %}"
+                         role="img" alt="" aria-hidden="true">
+                    <div class="usa-media-block__body">
+                        <p>
+                            <strong>Secure .gov websites use HTTPS</strong><br>A
+                            <strong>lock</strong> (
+                            <span class="icon-lock"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="64"
+                                                         viewBox="0 0 52 64" class="usa-banner__lock-image" role="img"
+                                                         aria-labelledby="banner-lock-description-landing"
+                                                         focusable="false">
+                    <title id="banner-lock-title-landing">Lock</title>
+                    <desc id="banner-lock-description-landing">
+                      Locked padlock icon
+                    </desc>
+                    <path fill="#000000" fill-rule="evenodd"
+                          d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"></path>
+                  </svg> </span>) or <strong>https://</strong> means you've safely connected to
+                            the .gov website. Share sensitive information only on official,
+                            secure websites.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- ================================================================
      Header / Navigation — USWDS Basic Header with dark HDS palette
@@ -192,7 +256,7 @@
             <div class="grid-row grid-gap">
                 <div class="usa-footer__logo grid-row mobile-lg:grid-col-6 mobile-lg:grid-gap-2">
                     <div class="mobile-lg:grid-col-auto">
-                        <img class="usa-footer__logo-img" src="assets/img/logo-img.png" alt="">
+                        <img class="usa-footer__logo-img" src="{% static 'img/nasa-logo.svg' %}" alt="EarthRISE logo">
                     </div>
                     <div class="mobile-lg:grid-col-auto">
                         <p class="usa-footer__logo-heading">EarthRISE</p>
@@ -291,8 +355,8 @@
         crossorigin="anonymous"></script>
 
 <!-- Bootstrap 5 JS Bundle (needed for quick-create modal in add_tool.html) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmB27ZBBv3/J2WlUkv3WMKOqEp+T"
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
 
 <!-- USWDS JS (handles usa-header mobile nav, accordions, etc.) -->
