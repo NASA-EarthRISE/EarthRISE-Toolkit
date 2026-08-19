@@ -1,0 +1,332 @@
+{% extends "hds/hds_base.html" %}
+{% load static %}
+
+{% block title %}EarthRISE Toolkit — Tools{% endblock %}
+{% block meta_description %}Browse and search the EarthRISE Toolkit — a catalog of Earth observation and geospatial tools developed by EarthRISE.{% endblock %}
+
+{% block main_content %}
+<main id="main-content" tabindex="-1">
+
+    <!-- Django messages -->
+    {% if messages %}
+        <div class="hz-messages-container" role="alert" aria-live="polite">
+            {% for message in messages %}
+                <div class="usa-alert usa-alert--info usa-alert--slim">
+                    <div class="usa-alert__body">
+                        <p class="usa-alert__text">{{ message }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<!-- ============================================================
+     Hero Banner
+     ============================================================ -->
+<section class="usa-hero hz-hero" aria-labelledby="hero-heading" data-hds-palette="dark">
+  <div class="usa-hero__callout">
+    <h1 id="hero-heading" class="usa-hero__heading">
+      <span class="usa-hero__heading--alt">EarthRISE Toolkit</span>
+    </h1>
+    <p>
+      A catalog of Earth observation and geospatial decision-support tools developed by EarthRISE.
+      {% if user.is_staff %}
+        Viewing as <strong>staff</strong> — all active tools are visible.
+      {% endif %}
+    </p>
+    {% if user.is_staff %}
+    <a href="{% url 'add_tool' %}" class="usa-button"
+       aria-label="Add a new tool to the catalog">
+      <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Add Tool
+    </a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ============================================================
+     Filter / Search Bar
+     ============================================================ -->
+<section class="hz-filter-bar" aria-label="Filter and search tools">
+  <div class="hz-container">
+    <form id="filterForm" method="get" action="" role="search">
+      <div class="hz-filter-row">
+
+        <!-- Search -->
+        <div class="hz-filter-search">
+          <label for="searchInput" class="usa-label">Search Tools</label>
+          <div class="usa-search usa-search--small" role="search">
+            <input type="search"
+                   id="searchInput"
+                   name="q"
+                   class="usa-input"
+                   placeholder="Search by name or description…"
+                   value="{{ search_query }}"
+                   aria-label="Search tools by name or description"
+                   aria-describedby="filter-auto-hint"
+                   autocomplete="off">
+            <button type="submit" class="usa-button" aria-label="Submit search">
+              <img src="{% static 'tools/hds/assets/img/hds-icons/search.svg' %}"
+                   class="usa-search__submit-icon" alt="Search">
+            </button>
+          </div>
+        </div>
+
+        <!-- Organization filter -->
+        <div class="hz-filter-org">
+          <div class="usa-form-group">
+            <label for="orgFilter" class="usa-label">Organization</label>
+            <select id="orgFilter" name="org" class="usa-select"
+                    aria-label="Filter by organization"
+                    aria-describedby="filter-auto-hint">
+              <option value="">All Organizations</option>
+              {% for org in organizations %}
+              <option value="{{ org.name }}"{% if org_filter == org.name %} selected{% endif %}>
+                {{ org.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <!-- Clear button -->
+        <div class="hz-filter-clear">
+          {% if search_query or org_filter %}
+          <a href="{% url 'home' %}"
+             aria-label="Clear all filters and search">
+            <i class="bi bi-x-circle me-1" aria-hidden="true"></i> Clear
+          </a>
+          {% endif %}
+        </div>
+
+      </div><!-- /.hz-filter-row -->
+
+      <!-- Auto-submit disclosure (WCAG 3.2.2) -->
+      <p class="usa-hint" id="filter-auto-hint">
+        Results update automatically as you type or change filters.
+      </p>
+
+      <!-- Results count -->
+      <div class="hz-results-meta" aria-live="polite" aria-atomic="true">
+        {% if total_count == 0 %}
+          No tools found.
+        {% elif total_count == 1 %}
+          1 tool found.
+        {% else %}
+          {{ total_count }} tool{{ total_count|pluralize }} found.
+        {% endif %}
+        {% if search_query %}
+          Showing results for <strong>{{ search_query }}</strong>.
+        {% endif %}
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<!-- ============================================================
+     Tool Grid
+     ============================================================ -->
+<section class="hz-container hz-catalog-section" aria-label="Tool catalog grid">
+
+  {% if page_obj.object_list %}
+
+  <div class="hz-grid" role="list">
+
+    {% for app in page_obj.object_list %}
+    <article class="hz-card" role="listitem">
+
+      {% if user.is_staff %}
+        <a href="{% url 'tool_detail' app.pk %}"
+           class="hz-card-link"
+           aria-label="View details for {{ app.name }}">
+      {% else %}
+        {% if app.url %}
+        <a href="{{ app.url }}"
+           class="hz-card-link"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Open {{ app.name }} (opens in new tab)">
+        {% else %}
+        <div class="hz-card-link" role="group" aria-label="{{ app.name }}">
+        {% endif %}
+      {% endif %}
+      
+
+        <!-- Thumbnail image -->
+        {% if app.hero %}
+        <img src="{{ app.hero.url }}"
+             alt="{{ app.name }} thumbnail"
+             class="hz-card-thumb"
+             loading="lazy">
+        {% else %}
+        <img src="{% static 'tools/hds/assets/img/circle-gray-20.svg' %}"
+             alt="{{ app.name }} — no image available"
+             class="hz-card-thumb hz-card-thumb-placeholder"
+             loading="lazy">
+        {% endif %}
+
+        <!-- Card body -->
+        <div class="hz-card-body">
+          <h2 class="hz-card-title">{{ app.name }}</h2>
+          {% if app.description %}
+          <p class="hz-card-desc">{{ app.description }}</p>
+          {% endif %}
+        </div>
+
+      {% if user.is_staff %}
+      </a>
+      {% else %}
+        {% if app.url %}
+        </a>
+        {% else %}
+        </div>
+        {% endif %}
+      {% endif %}
+               
+
+
+      <!-- Card footer -->
+      <div class="hz-card-footer">
+        <span class="hz-card-org">
+          {% if app.organization %}
+          <i class="bi bi-building" aria-hidden="true"></i>
+          {{ app.organization.name }}
+          {% else %}
+          <span class="hds-metadata">No organization</span>
+          {% endif %}
+        </span>
+
+        <span class="hz-card-likes" aria-label="{{ app.like_count }} like{{ app.like_count|pluralize }}">
+          <i class="bi bi-heart" aria-hidden="true"></i>
+          {{ app.like_count }}
+        </span>
+      </div>
+
+      <!-- Staff: pending visibility badge -->
+      {% if user.is_staff and not app.shown %}
+      <div class="hz-card-badge">
+        <span class="usa-tag hz-tag-pending" title="Not publicly visible">
+          <i class="bi bi-eye-slash me-1" aria-hidden="true"></i>Pending
+        </span>
+      </div>
+      {% endif %}
+
+    </article>
+    {% endfor %}
+
+  </div><!-- /.hz-grid -->
+
+  {% else %}
+
+  <!-- Empty state -->
+  <div class="hz-empty" role="status" aria-live="polite">
+    <div class="hz-empty-icon">
+      <i class="bi bi-search" aria-hidden="true"></i>
+    </div>
+    <h3>No tools found</h3>
+    <p class="hds-metadata">
+      {% if search_query or org_filter %}
+        Try adjusting your search or filters.
+        <a class="usa-link" href="{% url 'home' %}">Clear all filters</a>
+      {% else %}
+        No tools are currently available in the catalog.
+        {% if user.is_staff %}
+          <a class="usa-link" href="{% url 'add_tool' %}">Add the first tool.</a>
+        {% endif %}
+      {% endif %}
+    </p>
+  </div>
+
+  {% endif %}
+
+  <!-- ============================================================
+       Pagination — USWDS
+       ============================================================ -->
+  {% if page_obj.paginator.num_pages > 1 %}
+  <nav class="usa-pagination" aria-label="Tool catalog pagination">
+    <ul class="usa-pagination__list">
+
+      {% with qs=request.GET.urlencode %}
+
+      <!-- Previous -->
+      {% if page_obj.has_previous %}
+      <li class="usa-pagination__item usa-pagination__arrow">
+        <a href="?page={{ page_obj.previous_page_number }}&{{ qs|cut:'page='|cut:page_obj.number }}"
+           class="usa-pagination__link usa-pagination__previous-page"
+           aria-label="Previous page">
+          <svg class="usa-icon" aria-hidden="true" role="img">
+            <use href="{% static 'tools/hds/assets/img/hds-sprite.svg' %}#arrow-chevron-left"></use>
+          </svg>
+          <span class="usa-pagination__link-text">Previous</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="usa-pagination__item usa-pagination__arrow">
+        <span class="usa-pagination__link usa-pagination__previous-page usa-pagination__link--disabled"
+              aria-disabled="true" aria-label="No previous page">
+          <svg class="usa-icon" aria-hidden="true" role="img">
+            <use href="{% static 'tools/hds/assets/img/hds-sprite.svg' %}#arrow-chevron-left"></use>
+          </svg>
+          <span class="usa-pagination__link-text">Previous</span>
+        </span>
+      </li>
+      {% endif %}
+
+      <!-- Page numbers -->
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="usa-pagination__item usa-pagination__page-no">
+          <a class="usa-pagination__button usa-current"
+             href="?page={{ num }}&{{ qs }}"
+             aria-label="Page {{ num }}, current"
+             aria-current="page">{{ num }}</a>
+        </li>
+        {% elif num >= page_obj.number|add:"-3" and num <= page_obj.number|add:"3" %}
+        <li class="usa-pagination__item usa-pagination__page-no">
+          <a class="usa-pagination__button"
+             href="?page={{ num }}&{{ qs }}"
+             aria-label="Page {{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+      {% endfor %}
+
+      <!-- Next -->
+      {% if page_obj.has_next %}
+      <li class="usa-pagination__item usa-pagination__arrow">
+        <a href="?page={{ page_obj.next_page_number }}&{{ qs }}"
+           class="usa-pagination__link usa-pagination__next-page"
+           aria-label="Next page">
+          <span class="usa-pagination__link-text">Next</span>
+          <svg class="usa-icon" aria-hidden="true" role="img">
+            <use href="{% static 'tools/hds/assets/img/hds-sprite.svg' %}#arrow-chevron-right"></use>
+          </svg>
+        </a>
+      </li>
+      {% else %}
+      <li class="usa-pagination__item usa-pagination__arrow">
+        <span class="usa-pagination__link usa-pagination__next-page usa-pagination__link--disabled"
+              aria-disabled="true" aria-label="No next page">
+          <span class="usa-pagination__link-text">Next</span>
+          <svg class="usa-icon" aria-hidden="true" role="img">
+            <use href="{% static 'tools/hds/assets/img/hds-sprite.svg' %}#arrow-chevron-right"></use>
+          </svg>
+        </span>
+      </li>
+      {% endif %}
+
+      {% endwith %}
+    </ul>
+  </nav>
+  {% endif %}
+
+</section><!-- /.hz-catalog-section -->
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  $(document).ready(function () {
+    initFilterBar();
+  });
+</script>
+{% endblock %}

@@ -138,7 +138,9 @@ if _csrf_origins:
 
 STATIC_URL = f"{SCRIPT_NAME}/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "static", 
+                    BASE_DIR / "node_modules",
+]
 
 # Media files (user-uploaded content)
 MEDIA_URL = f"{SCRIPT_NAME}/media/"

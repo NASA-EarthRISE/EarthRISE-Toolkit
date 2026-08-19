@@ -196,3 +196,5 @@ def add_tool(request):
         'form_options': options,
         'form_options_json': json.dumps(options),
     })
+def hds_preview(request):
+    return render(request, 'hds/hds_home.html')
