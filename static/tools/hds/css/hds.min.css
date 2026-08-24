@@ -317,3 +317,37 @@
   top: 0.5rem;
   right: 0.5rem;
 }
+.usa-accordion__button::after {
+ margin-left: 7.75rem;
+
+}
+.usa-hero__callout {
+  margin-block-start: 3.5rem;
+  margin-block-end: 3.5rem;
+  display:inline-block;
+  margin-left: 43.0rem;
+}
+/* Mobile nav panel */
+@media (max-width: 64em) {
+  .usa-nav {
+    background-color: var(--hds-color-carbon-80,white, #2e2e32);
+    padding: 1rem;
+  }
+
+  .usa-nav__primary a {
+    color: #fff;
+  }
+
+  .hz-nav-auth {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-block-start: 1rem;
+    padding-block-start: 1rem;
+    border-top: 1px solid var(--hds-color-carbon-70, #444447);
+  }
+}
+.usa-nav__link{
+  color: var(--hds-color-nasa-blue, #1c67e3);
+}
+
+ 

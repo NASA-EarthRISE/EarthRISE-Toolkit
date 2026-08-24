@@ -197,4 +197,42 @@ def add_tool(request):
         'form_options_json': json.dumps(options),
     })
 def hds_preview(request):
-    return render(request, 'hds/hds_home.html')
+    qs = (
+            Application.objects
+            .filter(active=True)
+            .select_related('organization')
+        )
+    
+        # Non-staff only see tools marked as shown
+    if not (request.user.is_authenticated and request.user.is_staff):
+        qs = qs.filter(shown=True)
+
+    # Search
+    search_query = request.GET.get('q', '').strip()
+    if search_query:
+        qs = qs.filter(
+            Q(name__icontains=search_query) | Q(description__icontains=search_query)
+        ).distinct()
+
+    # Organisation filter
+    org_filter = request.GET.get('org', '').strip()
+    if org_filter:
+        qs = qs.filter(organization__name=org_filter)
+
+    # Pagination — 12 cards per page
+    paginator = Paginator(qs, 12)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    organizations = Organization.objects.order_by('name')
+
+    return render(request, 'hds/hds_home.html', {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'org_filter': org_filter,
+        'organizations': organizations,
+        'total_count': paginator.count,
+    })
+
+    
+    
