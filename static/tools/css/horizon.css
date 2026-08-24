@@ -345,6 +345,7 @@ main {
 }
 
 .usa-search .usa-button {
+  
   height: 2.5rem;
   padding-inline: 0.875rem;
 }
@@ -1201,4 +1202,7 @@ main {
     padding-block-start: 1rem;
     border-top: 1px solid var(--hds-color-carbon-70, #444447);
   }
+}
+.usa-nav__link {
+ color:#b84f0e
 }
