@@ -171,6 +171,9 @@
                alt="{{ app.name }} thumbnail"
                class="hz-card-thumb"
                loading="lazy">
+          {% if app.hero_credit %}
+          <span class="hz-card-credit">Credit: {{ app.hero_credit }}</span>
+          {% endif %}
           {% else %}
           <img src="{% static 'tools/hds/assets/img/circle-gray-20.svg' %}"
                alt="{{ app.name }} — no image available"
