@@ -154,6 +154,7 @@ def add_tool(request):
             description=request.POST.get('description', ''),
             url=request.POST.get('url', ''),
             organization=org,
+            hero_credit=request.POST.get('hero_credit', '').strip() or None,
             code_repo_url=request.POST.get('code_repo_url', ''),
             design_documentation_url=request.POST.get('design_documentation_url', ''),
             platform_description=request.POST.get('platform_description', ''),

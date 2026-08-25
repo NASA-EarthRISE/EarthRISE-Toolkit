@@ -632,6 +632,23 @@ figure.hds-media-background img {
   opacity: 0.35;
 }
 
+/* Photo credit watermark — bottom-right corner of thumbnail */
+.hz-card-credit {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.375rem;
+  font-size: 0.6rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(0, 0, 0, 0.45);
+  padding: 1px 5px;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Card body */
 .hz-card-body {
   flex: 1;

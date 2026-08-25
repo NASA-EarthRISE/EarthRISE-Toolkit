@@ -12,6 +12,7 @@ class Application(models.Model):
     description = models.TextField(help_text="Brief application description", blank=True)
     url = models.URLField(max_length=200, blank=True)
     hero = models.ImageField(upload_to='heroes/', blank=True)
+    hero_credit = models.CharField(max_length=250, blank=True, null=True, help_text="Image credit / attribution shown on the thumbnail")
     organization = models.ForeignKey(
         'Organization', on_delete=models.CASCADE,
         help_text="Organization that developed the application", blank=True, null=True

@@ -70,7 +70,7 @@ class ApplicationAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     readonly_fields = ('total_likes',)
     fieldsets = (
         ('Identification', {
-            'fields': ('name', 'description', 'total_likes', 'url', 'hero', 'organization'),
+            'fields': ('name', 'description', 'total_likes', 'url', 'hero', 'hero_credit', 'organization'),
         }),
         ('Infrastructure', {
             'fields': (
