@@ -4,73 +4,30 @@
 {% block title %}EarthRISE Toolkit — Tools{% endblock %}
 {% block meta_description %}Browse and search the EarthRISE Toolkit — a catalog of Earth observation and geospatial tools developed by EarthRISE.{% endblock %}
 
-{% block main_content %}
-<main id="main-content" tabindex="-1">
-
-    <!-- Django messages -->
-    {% if messages %}
-        <div class="hz-messages-container" role="alert" aria-live="polite">
-            {% for message in messages %}
-                <div class="usa-alert usa-alert--info usa-alert--slim">
-                    <div class="usa-alert__body">
-                        <p class="usa-alert__text">{{ message }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+{% block content %}
 
 <!-- ============================================================
-     Hero Banner — NASA Page Intro style
+     Hero Banner
      ============================================================ -->
-<div class="width-full maxw-full padding-0 hds-module hds-module-full" aria-label="Introduction">
-  <div class="hds-page-intro hds-page-intro-banner width-full maxw-full padding-0 hds-cover-wrapper minh-tablet">
-
-    <div class="hds-foreground-wrapper display-flex">
-      <div class="grid-row grid-container grid-container-block margin-top-auto margin-bottom-auto width-full maxw-desktop-lg padding-top-9 padding-bottom-9 padding-x-3 z-400">
-        <div class="grid-col-12 desktop:grid-col-6 desktop:padding-right-4 margin-bottom-3 desktop:margin-bottom-0">
-          <div class="margin-bottom-2">
-            <h1 id="hero-heading" class="page-heading-md line-height-sm color-spacesuit-white-important">
-              EarthRISE Toolkit
-            </h1>
-          </div>
-          <p class="p-lg color-carbon-30-important">
-            <em>A catalog of Earth observation and geospatial decision-support tools developed by EarthRISE</em>
-          </p>
-          {% if user.is_staff %}
-          <div class="margin-top-3">
-            <a href="{% url 'add_tool' %}" class="usa-button"
-               aria-label="Add a new tool to the catalog">
-              <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Add Tool
-            </a>
-            <span class="color-carbon-30-important" style="font-size:0.85rem; margin-left:0.75rem;">
-              Viewing as <strong style="color:#fff;">staff</strong>
-            </span>
-          </div>
-          {% endif %}
-        </div>
-        <div class="grid-col-12 desktop:grid-col-6"></div>
-      </div>
-    </div>
-
-    <div class="skrim-overlay skrim-left mobile-skrim-top z-200"></div>
-
-    <figure class="hds-media-background">
-      <img
-        width="2048" height="1152"
-        src="https://assets.science.nasa.gov/dynamicimage/assets/science/esd/earth-science-division/earth-action/Banner_EA.jpg?w=1200&h=675&fit=crop&crop=faces%2Cfocalpoint"
-        alt="Earth observation satellite with practical Earth science applications"
-        loading="eager"
-        srcset="
-          https://assets.science.nasa.gov/dynamicimage/assets/science/esd/earth-science-division/earth-action/Banner_EA.jpg?w=400&h=225&fit=crop&crop=faces%2Cfocalpoint   400w,
-          https://assets.science.nasa.gov/dynamicimage/assets/science/esd/earth-science-division/earth-action/Banner_EA.jpg?w=768&h=432&fit=crop&crop=faces%2Cfocalpoint   768w,
-          https://assets.science.nasa.gov/dynamicimage/assets/science/esd/earth-science-division/earth-action/Banner_EA.jpg?w=1200&h=675&fit=crop&crop=faces%2Cfocalpoint 1200w,
-          https://assets.science.nasa.gov/dynamicimage/assets/science/esd/earth-science-division/earth-action/Banner_EA.jpg?w=2048&h=1152&fit=crop&crop=faces%2Cfocalpoint 2048w"
-        sizes="100vw">
-    </figure>
-
+<section class="usa-hero hz-hero" aria-labelledby="hero-heading" data-hds-palette="dark">
+  <div class="usa-hero__callout">
+    <h1 id="hero-heading" class="usa-hero__heading">
+      <span class="usa-hero__heading--alt">EarthRISE Toolkit</span>
+    </h1>
+    <p>
+      A catalog of Earth observation and geospatial decision-support tools developed by EarthRISE.
+      {% if user.is_staff %}
+        Viewing as <strong>staff</strong> — all active tools are visible.
+      {% endif %}
+    </p>
+    {% if user.is_staff %}
+    <a href="{% url 'add_tool' %}" class="usa-button"
+       aria-label="Add a new tool to the catalog">
+      <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Add Tool
+    </a>
+    {% endif %}
   </div>
-</div>
+</section>
 
 <!-- ============================================================
      Filter / Search Bar
@@ -100,9 +57,26 @@
           </div>
         </div>
 
+        <!-- Organization filter -->
+        <div class="hz-filter-org">
+          <div class="usa-form-group">
+            <label for="orgFilter" class="usa-label">Organization</label>
+            <select id="orgFilter" name="org" class="usa-select"
+                    aria-label="Filter by organization"
+                    aria-describedby="filter-auto-hint">
+              <option value="">All Organizations</option>
+              {% for org in organizations %}
+              <option value="{{ org.name }}"{% if org_filter == org.name %} selected{% endif %}>
+                {{ org.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
         <!-- Clear button -->
         <div class="hz-filter-clear">
-          {% if search_query %}
+          {% if search_query or org_filter %}
           <a href="{% url 'home' %}"
              aria-label="Clear all filters and search">
             <i class="bi bi-x-circle me-1" aria-hidden="true"></i> Clear
@@ -162,22 +136,19 @@
         <div class="hz-card-link" role="group" aria-label="{{ app.name }}">
         {% endif %}
       {% endif %}
-      
 
         <!-- Thumbnail image -->
-        <div class="hz-card-thumb-wrap">
-          {% if app.hero %}
-          <img src="{{ app.hero.url }}"
-               alt="{{ app.name }} thumbnail"
-               class="hz-card-thumb"
-               loading="lazy">
-          {% else %}
-          <img src="{% static 'tools/hds/assets/img/circle-gray-20.svg' %}"
-               alt="{{ app.name }} — no image available"
-               class="hz-card-thumb hz-card-thumb-placeholder"
-               loading="lazy">
-          {% endif %}
-        </div>
+        {% if app.hero %}
+        <img src="{{ app.hero.url }}"
+             alt="{{ app.name }} thumbnail"
+             class="hz-card-thumb"
+             loading="lazy">
+        {% else %}
+        <img src="{% static 'tools/hds/assets/img/circle-gray-20.svg' %}"
+             alt="{{ app.name }} — no image available"
+             class="hz-card-thumb hz-card-thumb-placeholder"
+             loading="lazy">
+        {% endif %}
 
         <!-- Card body -->
         <div class="hz-card-body">
@@ -196,8 +167,23 @@
         </div>
         {% endif %}
       {% endif %}
-               
 
+      <!-- Card footer -->
+      <div class="hz-card-footer">
+        <span class="hz-card-org">
+          {% if app.organization %}
+          <i class="bi bi-building" aria-hidden="true"></i>
+          {{ app.organization.name }}
+          {% else %}
+          <span class="hds-metadata">No organization</span>
+          {% endif %}
+        </span>
+
+        <span class="hz-card-likes" aria-label="{{ app.like_count }} like{{ app.like_count|pluralize }}">
+          <i class="bi bi-heart" aria-hidden="true"></i>
+          {{ app.like_count }}
+        </span>
+      </div>
 
       <!-- Staff: pending visibility badge -->
       {% if user.is_staff and not app.shown %}
@@ -317,10 +303,8 @@
   {% endif %}
 
 </section><!-- /.hz-catalog-section -->
-</main>
+
 {% endblock %}
-
-
 
 {% block extra_scripts %}
 <script>
