@@ -405,13 +405,8 @@ figure.hds-media-background img {
 
 /* Desktop: dark left → transparent right */
 .skrim-left {
-  background: linear-gradient(
-    to right,
-    rgba(10, 18, 36, 0.90) 0%,
-    rgba(10, 18, 36, 0.74) 28%,
-    rgba(10, 18, 36, 0.22) 55%,
-    rgba(10, 18, 36, 0.00) 70%
-  );
+  background: linear-gradient(65.99deg, #000 0, transparent 99.04%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d4000000", endColorstr="#00000000", GradientType=1);
 }
 
 /* Mobile: dark top → transparent bottom */
