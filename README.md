@@ -30,8 +30,9 @@ A Django-based catalog for Earth observation and geospatial decision-support too
 |-------|-----------|
 | Backend | Python 3.13, Django 6.0.6 |
 | Database | SQLite (development) |
-| Frontend | Bootstrap 5.3, jQuery 3.7, Bootstrap Icons 1.11 |
-| Fonts | Google Fonts — Inter (headings) + Public Sans (body) |
+| Frontend | NASA Horizon Design System, USWDS, Bootstrap 5.3, jQuery 3.7 |
+| Navigation | NASA Global Navigation (live from nasa.gov API, DatabaseCache, static fallback) |
+| Fonts | Inter (headings) + Public Sans (body) via HDS |
 | Admin | Django Admin + django-import-export |
 | Images | Pillow |
 
@@ -45,15 +46,20 @@ EarthRISE_Toolkit/
 │   ├── settings.py
 │   ├── urls.py
 │   ├── wsgi.py
-│   └── asgi.py
+│   ├── asgi.py
+│   └── context_processors.py  # Injects NASA nav + footer metadata into all templates
 ├── tools/                      # Main application
 │   ├── migrations/
+│   ├── management/
+│   │   └── commands/
+│   │       └── refresh_nasa_nav.py  # Busts and re-warms the NASA nav cache
 │   ├── models.py               # 14 models (Application, Organization, etc.)
+│   ├── nasa_nav.py             # Fetches/caches NASA global nav from nasa.gov API
 │   ├── views.py                # home, tool_detail, add_tool, quick_create
 │   ├── urls.py
 │   └── admin.py                # Full admin with import/export
 ├── templates/
-│   ├── base.html               # Horizon header/footer, Bootstrap/jQuery
+│   ├── base.html               # NASA global nav, app-footer, HDS/USWDS assets
 │   ├── home.html               # Filterable, searchable, pageable grid
 │   ├── tool_detail.html        # Staff-only detail view
 │   └── add_tool.html           # Staff-only add form
@@ -68,8 +74,8 @@ EarthRISE_Toolkit/
 ├── media/                      # User-uploaded content (auto-created)
 │   ├── heroes/
 │   └── icons/
-├── horizon-design-system.md    # Horizon DS reference
 ├── manage.py
+├── requirements.txt
 ├── environment.yml
 └── README.md
 ```
@@ -110,19 +116,30 @@ conda env create -f environment.yml
 conda activate earthrise-toolkit
 ```
 
-### 2. Apply database migrations
+### 2. Apply database migrations and create the cache table
 
 ```bash
 python manage.py migrate
+python manage.py createcachetable
 ```
 
-### 3. Create a superuser (staff account)
+The `createcachetable` command creates the `django_cache` table used by the DatabaseCache backend to store the NASA global navigation data across Gunicorn workers.
+
+### 3. Pre-warm the NASA global navigation cache (optional)
+
+```bash
+python manage.py refresh_nasa_nav
+```
+
+This fetches the live NASA global navigation from `nasa.gov` and caches it for 4 hours. If the command fails (no network access), the app falls back to a static header automatically.
+
+### 4. Create a superuser (staff account)
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 4. Add the no_profile placeholder image (optional)
+### 5. Add the no_profile placeholder image (optional)
 
 Place a 150×150 px JPEG or PNG at:
 
@@ -132,13 +149,13 @@ static/tools/img/no_profile.png
 
 This is shown as a fallback for team members without a photo.
 
-### 5. Collect static files (production only)
+### 6. Collect static files (production only)
 
 ```bash
 python manage.py collectstatic
 ```
 
-### 6. Run the development server
+### 7. Run the development server
 
 ```bash
 python manage.py runserver
@@ -213,6 +230,26 @@ See `horizon-design-system.md` for the full reference.
 
 ---
 
+## NASA Global Navigation
+
+The application integrates the live NASA global navigation bar fetched from the NASA HDS WordPress API (`https://www.nasa.gov/wp-json/nasa-hds/v1/site-markup-elements`). The response is cached for 4 hours using Django's DatabaseCache backend, so all Gunicorn workers share a single cached copy.
+
+If the API is unreachable (no network access, NASA maintenance, etc.), the template automatically displays a static fallback header with Bootstrap-powered dropdowns and an offcanvas mobile menu.
+
+**Cache management:**
+
+```bash
+# Create the cache table (run once after migrate)
+python manage.py createcachetable
+
+# Manually bust and re-warm the cache
+python manage.py refresh_nasa_nav
+```
+
+To refresh the cache on a schedule, wire `refresh_nasa_nav` to a systemd timer or cron job running every 4 hours.
+
+---
+
 ## Environment Variables
 
 For production, override these settings (via environment variables or a `.env` file):
@@ -222,7 +259,11 @@ For production, override these settings (via environment variables or a `.env` f
 | `SECRET_KEY` | Django secret key (rotate from default) |
 | `DEBUG` | Set to `False` in production |
 | `ALLOWED_HOSTS` | Comma-separated list of allowed hostnames |
-| `DATABASE_URL` | Switch to PostgreSQL or another production database |
+| `SCRIPT_NAME` | Sub-path prefix, e.g. `/earthrise-toolkit` (empty for root deployment) |
+| `CSRF_TRUSTED_ORIGINS` | Full HTTPS origin for production, e.g. `https://science.data.nasa.gov` |
+| `RESPONSIBLE_NASA_OFFICIAL` | Name shown in the footer as the Responsible NASA Official |
+| `SITE_EDITOR` | Name shown in the footer as the site editor / team contact |
+| `SITE_LAST_UPDATED` | Date shown in the footer, e.g. `2026-10-27` |
 
 ---
 
