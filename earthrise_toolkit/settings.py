@@ -28,6 +28,16 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=lambda v: [h.strip() for h in v.split(',') if h.strip()])
 
+# ---------------------------------------------------------------------------
+# NASA footer metadata — injected into every page via the site_metadata
+# context processor.  Override in .env for production.
+# ---------------------------------------------------------------------------
+RESPONSIBLE_NASA_OFFICIAL = config(
+    "RESPONSIBLE_NASA_OFFICIAL", default="TBD — Responsible NASA Official"
+)
+SITE_EDITOR = config("SITE_EDITOR", default="TBD — Site Editor / Team Contact")
+SITE_LAST_UPDATED = config("SITE_LAST_UPDATED", default="")
+
 
 # Application definition
 
@@ -65,6 +75,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # Injects nasa_nav_header, nasa_nav_css/js, responsible_nasa_official,
+                # site_editor, site_last_updated into every template context.
+                "earthrise_toolkit.context_processors.site_metadata",
             ],
         },
     },
@@ -80,6 +93,16 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+
+
+# Cache — DatabaseCache keeps NASA nav data shared across all Gunicorn workers.
+# Run `python manage.py createcachetable` once after initial migrate.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "django_cache",
     }
 }
 
